@@ -3,145 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Link Saver</title>
+  <title>Wishlist</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg:       var(--tg-theme-bg-color, #1c1c1e);
-      --bg2:      var(--tg-theme-secondary-bg-color, #2c2c2e);
-      --text:     var(--tg-theme-text-color, #ffffff);
-      --hint:     var(--tg-theme-hint-color, #8e8e93);
-      --accent:   var(--tg-theme-button-color, #3478f6);
-      --radius:   14px;
-    }
-
-    html, body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
+    body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      font-size: 16px;
+      background: #151b22;
+      color: #fff;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
-    .page {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 16px 16px 32px;
-    }
+    /* ── Tabs ── */
+    .tab-content { display: none; padding: 20px 16px 100px; max-width: 480px; margin: 0 auto; }
+    .tab-content.active { display: block; }
 
-    /* Header */
-    .header {
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #1c2431;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 4px 8px;
+      cursor: pointer;
+      gap: 4px;
+      transition: opacity 0.15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item:active { opacity: 0.6; }
+    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-label {
+      font-size: 10px;
+      color: #4a5a6d;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .nav-item.active .nav-label { color: #3ddc84; }
+    .nav-item.active .nav-icon  { filter: none; }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #3ddc84;
+      margin-top: 2px;
+      opacity: 0;
+    }
+    .nav-item.active .nav-dot { opacity: 1; }
+
+    /* ── Common ── */
+    .page-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 24px;
     }
-    .header-icon { font-size: 30px; line-height: 1; }
-    .header h1  { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-
-    /* Card */
-    .card {
-      background: var(--bg2);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 12px;
+    .page-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
     }
+    .page-icon.green  { background: #1e3a2f; }
+    .page-icon.blue   { background: #1a2a3f; }
+    .page-icon.purple { background: #2a1f3d; }
+    .page-icon.gold   { background: #3a2f10; }
+    .page-icon.gray   { background: #232d3a; }
 
-    .field {
-      padding: 12px 14px;
-      position: relative;
-    }
-    .field + .field { border-top: 1px solid rgba(255,255,255,0.06); }
+    .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .page-sub   { font-size: 13px; color: #6b7a8d; margin-top: 1px; }
 
-    label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--hint);
+    .section-label {
+      font-size: 12px; font-weight: 600;
+      color: #6b7a8d;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 6px;
+      letter-spacing: 0.7px;
+      margin: 20px 0 8px 4px;
     }
+
+    .card { background: #1c2431; border-radius: 16px; overflow: hidden; }
+    .field { padding: 14px 16px; }
+    .field + .field { border-top: 1px solid rgba(255,255,255,0.05); }
 
     input, textarea {
-      width: 100%;
-      background: transparent;
-      border: none;
-      font-size: 16px;
-      color: var(--text);
-      outline: none;
-      font-family: inherit;
+      width: 100%; background: transparent; border: none;
+      font-size: 15px; color: #fff; outline: none;
+      font-family: inherit; line-height: 1.4;
     }
-    input::placeholder, textarea::placeholder { color: var(--hint); }
+    input::placeholder, textarea::placeholder { color: #3d4e63; }
+    textarea { resize: none; height: 70px; }
 
-    textarea {
-      resize: none;
-      height: 72px;
-      line-height: 1.4;
-    }
-
-    /* URL row */
-    .url-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .url-row { display: flex; align-items: center; gap: 8px; }
     .url-row input { flex: 1; min-width: 0; }
 
     .btn-clear {
       flex-shrink: 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--hint);
-      font-size: 18px;
-      line-height: 1;
-      padding: 2px;
-      display: none;
-      transition: opacity 0.15s;
+      background: #2a3547; border: none; cursor: pointer;
+      color: #6b7a8d; font-size: 13px;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
     }
-    .btn-clear:active { opacity: 0.5; }
+    .btn-clear:active { background: #344057; }
 
-    /* Status badge */
-    .status {
-      font-size: 13px;
-      margin-top: 7px;
-      min-height: 17px;
-      color: var(--hint);
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .status { font-size: 12px; margin-top: 6px; min-height: 16px; color: #6b7a8d; }
+    .status.ok    { color: #3ddc84; }
+    .status.error { color: #ff5f5f; }
+    .hint { font-size: 12px; color: #3d4e63; margin-top: 5px; }
+
+    /* ── Quick tags ── */
+    .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tag-chip {
+      background: #1c2431; border: 1px solid #2a3547;
+      border-radius: 20px; padding: 5px 12px;
+      font-size: 13px; color: #8b9bb4;
+      cursor: pointer; transition: all 0.15s; user-select: none;
     }
-    .status.ok    { color: #30d158; }
-    .status.error { color: #ff453a; }
-    .status.load  { color: var(--accent); }
+    .tag-chip.selected { background: #1e3a2f; border-color: #3ddc84; color: #3ddc84; }
 
-    /* Tags hint */
-    .hint {
-      font-size: 12px;
-      color: var(--hint);
-      margin-top: 6px;
+    /* ── Wish cards (списки) ── */
+    .wish-item {
+      background: #1c2431; border-radius: 16px;
+      padding: 14px 16px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 12px;
     }
+    .wish-emoji { font-size: 28px; flex-shrink: 0; }
+    .wish-info { flex: 1; min-width: 0; }
+    .wish-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-url  { font-size: 12px; color: #4a5a6d; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-badge {
+      flex-shrink: 0; font-size: 11px; font-weight: 600;
+      padding: 3px 8px; border-radius: 20px;
+    }
+    .wish-badge.green  { background: #1e3a2f; color: #3ddc84; }
+    .wish-badge.gold   { background: #3a2f10; color: #f0b429; }
+    .wish-badge.blue   { background: #1a2a3f; color: #5b9cf6; }
 
-    /* Bottom padding for Telegram main button */
-    .bottom-space { height: 80px; }
+    /* Empty state */
+    .empty {
+      text-align: center; padding: 60px 20px;
+      color: #4a5a6d;
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 15px; }
+
+    /* Profile */
+    .profile-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #1e3a2f;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 12px;
+    }
+    .profile-name { text-align: center; font-size: 18px; font-weight: 700; }
+    .profile-sub  { text-align: center; font-size: 13px; color: #6b7a8d; margin-top: 4px; }
+    .stat-row {
+      display: flex; gap: 10px; margin-top: 20px;
+    }
+    .stat-box {
+      flex: 1; background: #1c2431; border-radius: 16px;
+      padding: 16px 12px; text-align: center;
+    }
+    .stat-num { font-size: 24px; font-weight: 700; color: #3ddc84; }
+    .stat-lbl { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
   </style>
 </head>
 <body>
-<div class="page">
 
-  <div class="header">
-    <span class="header-icon">🔗</span>
-    <h1>Link Saver</h1>
+<!-- ══ TAB: Главная (добавить) ══ -->
+<div class="tab-content active" id="tab-home">
+  <div class="page-header">
+    <div class="page-icon green">🔗</div>
+    <div>
+      <div class="page-title">Добавить</div>
+      <div class="page-sub">Сохрани ссылку в список</div>
+    </div>
   </div>
 
-  <!-- URL -->
+  <div class="section-label">Ссылка</div>
   <div class="card">
     <div class="field">
-      <label>Ссылка *</label>
       <div class="url-row">
         <input id="url" type="url" placeholder="https://..." autocomplete="off" autocorrect="off" spellcheck="false" />
         <button class="btn-clear" id="urlClear" type="button">✕</button>
@@ -150,46 +202,184 @@
     </div>
   </div>
 
-  <!-- Title -->
+  <div class="section-label">Название</div>
   <div class="card">
     <div class="field">
-      <label>Заголовок</label>
       <input id="title" type="text" placeholder="Оставь пустым — получу автоматически" autocomplete="off" />
     </div>
   </div>
 
-  <!-- Tags + Notes -->
+  <div class="section-label">Категория</div>
   <div class="card">
     <div class="field">
-      <label>Теги</label>
       <input id="tags" type="text" placeholder="дизайн, frontend, ресурс" autocomplete="off" />
       <div class="hint">Через запятую</div>
     </div>
+  </div>
+  <div class="quick-tags" id="quickTags">
+    <div class="tag-chip" data-tag="дизайн">дизайн</div>
+    <div class="tag-chip" data-tag="frontend">frontend</div>
+    <div class="tag-chip" data-tag="ресурс">ресурс</div>
+    <div class="tag-chip" data-tag="статья">статья</div>
+    <div class="tag-chip" data-tag="инструмент">инструмент</div>
+    <div class="tag-chip" data-tag="вдохновение">вдохновение</div>
+  </div>
+
+  <div class="section-label">Заметки</div>
+  <div class="card">
     <div class="field">
-      <label>Заметки</label>
       <textarea id="notes" placeholder="Зачем сохраняешь, что полезного..."></textarea>
     </div>
   </div>
-
-  <div class="bottom-space"></div>
 </div>
+
+<!-- ══ TAB: Все хотелки ══ -->
+<div class="tab-content" id="tab-all">
+  <div class="page-header">
+    <div class="page-icon blue">⭐</div>
+    <div>
+      <div class="page-title">Все хотелки</div>
+      <div class="page-sub">Твой список желаний</div>
+    </div>
+  </div>
+
+  <div class="empty">
+    <div class="empty-icon">✨</div>
+    <div class="empty-text">Пока пусто — добавь первую хотелку</div>
+  </div>
+</div>
+
+<!-- ══ TAB: Крупные хотелки ══ -->
+<div class="tab-content" id="tab-big">
+  <div class="page-header">
+    <div class="page-icon gold">💎</div>
+    <div>
+      <div class="page-title">Крупные хотелки</div>
+      <div class="page-sub">Дорогие и важные вещи</div>
+    </div>
+  </div>
+
+  <div class="empty">
+    <div class="empty-icon">💎</div>
+    <div class="empty-text">Здесь будут крупные желания</div>
+  </div>
+</div>
+
+<!-- ══ TAB: Подарки ══ -->
+<div class="tab-content" id="tab-gifts">
+  <div class="page-header">
+    <div class="page-icon purple">🎁</div>
+    <div>
+      <div class="page-title">Подарки</div>
+      <div class="page-sub">Что подарить и кому</div>
+    </div>
+  </div>
+
+  <div class="empty">
+    <div class="empty-icon">🎁</div>
+    <div class="empty-text">Здесь будут идеи для подарков</div>
+  </div>
+</div>
+
+<!-- ══ TAB: Профиль ══ -->
+<div class="tab-content" id="tab-profile">
+  <div class="profile-avatar">👤</div>
+  <div class="profile-name" id="profileName">Профиль</div>
+  <div class="profile-sub">Wishlist App</div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-num" id="statAll">0</div>
+      <div class="stat-lbl">Хотелок</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statBig">0</div>
+      <div class="stat-lbl">Крупных</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statGifts">0</div>
+      <div class="stat-lbl">Подарков</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:28px">О приложении</div>
+  <div class="card">
+    <div class="field" style="color:#6b7a8d; font-size:14px; line-height:1.5">
+      Wishlist — твой личный список желаний в Telegram.<br>
+      Сохраняй ссылки, делись с друзьями.
+    </div>
+  </div>
+</div>
+
+<!-- ══ Bottom Navigation ══ -->
+<nav class="bottom-nav">
+  <div class="nav-item active" data-tab="home">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Главная</div>
+    <div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" data-tab="all">
+    <div class="nav-icon">⭐</div>
+    <div class="nav-label">Все хотелки</div>
+    <div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" data-tab="big">
+    <div class="nav-icon">💎</div>
+    <div class="nav-label">Крупные</div>
+    <div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" data-tab="gifts">
+    <div class="nav-icon">🎁</div>
+    <div class="nav-label">Подарки</div>
+    <div class="nav-dot"></div>
+  </div>
+  <div class="nav-item" data-tab="profile">
+    <div class="nav-icon">👤</div>
+    <div class="nav-label">Профиль</div>
+    <div class="nav-dot"></div>
+  </div>
+</nav>
 
 <script>
   const tg = window.Telegram?.WebApp;
-
   if (tg) {
     tg.ready();
     tg.expand();
     tg.MainButton.setText('Сохранить');
     tg.MainButton.hide();
+    if (tg.initDataUnsafe?.user?.first_name) {
+      document.getElementById('profileName').textContent =
+        tg.initDataUnsafe.user.first_name + (tg.initDataUnsafe.user.last_name ? ' ' + tg.initDataUnsafe.user.last_name : '');
+    }
   }
 
-  const urlEl     = document.getElementById('url');
-  const titleEl   = document.getElementById('title');
-  const tagsEl    = document.getElementById('tags');
-  const notesEl   = document.getElementById('notes');
-  const statusEl  = document.getElementById('urlStatus');
-  const clearBtn  = document.getElementById('urlClear');
+  // ── Tab switching ──
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const tab = item.dataset.tab;
+      navItems.forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+
+      // Show/hide main button depending on tab
+      if (!tg) return;
+      if (tab === 'home') {
+        isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
+      } else {
+        tg.MainButton.hide();
+      }
+    });
+  });
+
+  // ── Home tab logic ──
+  const urlEl    = document.getElementById('url');
+  const titleEl  = document.getElementById('title');
+  const tagsEl   = document.getElementById('tags');
+  const notesEl  = document.getElementById('notes');
+  const statusEl = document.getElementById('urlStatus');
+  const clearBtn = document.getElementById('urlClear');
 
   function isUrl(s) {
     try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; }
@@ -201,16 +391,18 @@
     statusEl.className = 'status' + (type ? ' ' + type : '');
   }
 
-  function syncMainButton() {
+  function syncBtn() {
     if (!tg) return;
+    const activeTab = document.querySelector('.nav-item.active')?.dataset.tab;
+    if (activeTab !== 'home') return;
     isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
   }
 
   urlEl.addEventListener('input', () => {
-    const val = urlEl.value.trim();
-    clearBtn.style.display = val ? 'block' : 'none';
-    syncMainButton();
-    if (!val) setStatus('');
+    const v = urlEl.value.trim();
+    clearBtn.style.display = v ? 'flex' : 'none';
+    if (!v) setStatus('');
+    syncBtn();
   });
 
   clearBtn.addEventListener('click', () => {
@@ -221,25 +413,40 @@
     urlEl.focus();
   });
 
-  // Auto-fill from clipboard
+  document.getElementById('quickTags').addEventListener('click', e => {
+    const chip = e.target.closest('.tag-chip');
+    if (!chip) return;
+    chip.classList.toggle('selected');
+    const tag = chip.dataset.tag;
+    const current = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
+    const idx = current.indexOf(tag);
+    if (idx === -1) current.push(tag); else current.splice(idx, 1);
+    tagsEl.value = current.join(', ');
+  });
+
+  tagsEl.addEventListener('input', () => {
+    const current = tagsEl.value.split(',').map(t => t.trim());
+    document.querySelectorAll('.tag-chip').forEach(chip => {
+      chip.classList.toggle('selected', current.includes(chip.dataset.tag));
+    });
+  });
+
   if (navigator.clipboard?.readText) {
     navigator.clipboard.readText().then(text => {
-      const trimmed = text?.trim();
-      if (trimmed && isUrl(trimmed) && !urlEl.value) {
-        urlEl.value = trimmed;
-        clearBtn.style.display = 'block';
+      const t = text?.trim();
+      if (t && isUrl(t) && !urlEl.value) {
+        urlEl.value = t;
+        clearBtn.style.display = 'flex';
         setStatus('📋 Вставлено из буфера', 'ok');
-        syncMainButton();
+        syncBtn();
       }
     }).catch(() => {});
   }
 
-  // Send data when main button pressed
   if (tg) {
     tg.MainButton.onClick(() => {
       const url = urlEl.value.trim();
       if (!isUrl(url)) return;
-
       tg.MainButton.showProgress(false);
       tg.sendData(JSON.stringify({
         url:   url,
