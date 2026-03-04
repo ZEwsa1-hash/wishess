@@ -23,22 +23,19 @@
     }
     .nav-item {
       flex: 1; display: flex; flex-direction: column; align-items: center;
-      padding: 10px 4px 8px; cursor: pointer; gap: 3px;
+      padding: 10px 2px 8px; cursor: pointer; gap: 3px;
       user-select: none; -webkit-tap-highlight-color: transparent;
     }
     .nav-item:active { opacity: .6; }
-    .nav-icon  { font-size: 22px; line-height: 1; }
-    .nav-label { font-size: 10px; color: #4a5a6d; font-weight: 500; text-align: center; }
+    .nav-icon  { font-size: 20px; line-height: 1; }
+    .nav-label { font-size: 9px; color: #4a5a6d; font-weight: 500; text-align: center; }
     .nav-item.active .nav-label { color: #a78bfa; }
     .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #a78bfa; margin-top: 2px; opacity: 0; }
     .nav-item.active .nav-dot { opacity: 1; }
 
     /* ── Common ── */
     .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .page-icon {
-      width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
-    }
+    .page-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
     .page-icon.purple { background: #2a1f3d; }
     .page-icon.blue   { background: #1a2a3f; }
     .page-icon.gold   { background: #3a2f10; }
@@ -46,18 +43,12 @@
     .page-title { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
     .page-sub   { font-size: 13px; color: #6b7a8d; margin-top: 1px; }
 
-    .section-label {
-      font-size: 12px; font-weight: 600; color: #6b7a8d;
-      text-transform: uppercase; letter-spacing: .7px; margin: 20px 0 8px 4px;
-    }
+    .section-label { font-size: 12px; font-weight: 600; color: #6b7a8d; text-transform: uppercase; letter-spacing: .7px; margin: 20px 0 8px 4px; }
     .card { background: #17132a; border-radius: 16px; overflow: hidden; }
     .field { padding: 14px 16px; }
     .field + .field { border-top: 1px solid rgba(255,255,255,.05); }
 
-    input, textarea, select {
-      background: transparent; border: none; font-size: 15px; color: #fff;
-      outline: none; font-family: inherit; line-height: 1.4;
-    }
+    input, textarea, select { background: transparent; border: none; font-size: 15px; color: #fff; outline: none; font-family: inherit; line-height: 1.4; }
     input, textarea { width: 100%; }
     input::placeholder, textarea::placeholder { color: #3d3054; }
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.5); }
@@ -67,29 +58,22 @@
     textarea { resize: none; height: 70px; }
 
     .row2 { display: flex; gap: 10px; }
-    .row2 .card { flex: 1; }
+    .row2 > div { flex: 1; min-width: 0; }
+    .row2 .card { width: 100%; }
 
     .url-row { display: flex; align-items: center; gap: 8px; }
     .url-row input { flex: 1; min-width: 0; }
-    .btn-clear {
-      flex-shrink: 0; background: #2a2040; border: none; cursor: pointer;
-      color: #6b5a8d; font-size: 13px; width: 24px; height: 24px;
-      border-radius: 50%; display: none; align-items: center; justify-content: center;
-    }
+    .btn-clear { flex-shrink: 0; background: #2a2040; border: none; cursor: pointer; color: #6b5a8d; font-size: 13px; width: 24px; height: 24px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
 
     /* URL preview */
-    .url-preview {
-      display: none; align-items: center; gap: 10px;
-      margin-top: 10px; padding: 10px 12px;
-      background: #1f1835; border-radius: 12px;
-    }
+    .url-preview { display: none; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; background: #1f1835; border-radius: 12px; }
     .url-preview.show { display: flex; }
     .preview-favicon { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #2a2040; }
     .preview-title { font-size: 13px; color: #c4b5fd; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .status { font-size: 12px; margin-top: 6px; min-height: 16px; color: #6b5a8d; }
-    .status.ok { color: #a78bfa; }
-    .hint { font-size: 12px; color: #3d3054; margin-top: 5px; }
+    .status.ok   { color: #a78bfa; }
+    .status.warn { color: #f59e0b; }
 
     /* Toggle */
     .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
@@ -104,20 +88,11 @@
 
     /* Colored tags */
     .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .tag-chip {
-      border-radius: 20px; padding: 5px 12px; font-size: 13px;
-      cursor: pointer; transition: all .15s; user-select: none;
-      border: 1px solid transparent;
-    }
+    .tag-chip { border-radius: 20px; padding: 5px 12px; font-size: 13px; cursor: pointer; transition: all .15s; user-select: none; border: 1px solid transparent; }
 
     /* ── Priority pills ── */
     .priority-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-    .prio-pill {
-      padding: 5px 14px; border-radius: 20px; font-size: 13px;
-      cursor: pointer; border: 1.5px solid transparent;
-      transition: all .2s; user-select: none; opacity: .4;
-      -webkit-tap-highlight-color: transparent;
-    }
+    .prio-pill { padding: 5px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1.5px solid transparent; transition: all .2s; user-select: none; opacity: .4; -webkit-tap-highlight-color: transparent; }
     .prio-pill.sel { opacity: 1; }
     .prio-pill[data-p="urgent"]         { background: #3a1f1f; color: #f87171; }
     .prio-pill[data-p="urgent"].sel     { border-color: #f87171; }
@@ -127,25 +102,10 @@
     .prio-pill[data-p="later"].sel      { border-color: #60a5fa; }
 
     /* ── Currency picker ── */
-    .cur-btn {
-      display: inline-flex; align-items: center; gap: 3px;
-      background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px;
-      padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa;
-      cursor: pointer; user-select: none; white-space: nowrap;
-      position: relative; flex-shrink: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .cur-drop {
-      position: absolute; top: calc(100% + 8px); right: 0; z-index: 500;
-      background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px;
-      overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.7);
-      min-width: 110px; display: none;
-    }
+    .cur-btn { display: inline-flex; align-items: center; gap: 3px; background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px; padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa; cursor: pointer; user-select: none; white-space: nowrap; position: relative; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    .cur-drop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 500; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.7); min-width: 110px; display: none; }
     .cur-drop.open { display: block; }
-    .cur-opt {
-      padding: 11px 16px; font-size: 14px; cursor: pointer; color: #c4b5fd;
-      display: flex; align-items: center; gap: 8px;
-    }
+    .cur-opt { padding: 11px 16px; font-size: 14px; cursor: pointer; color: #c4b5fd; display: flex; align-items: center; gap: 8px; }
     .cur-opt:active { background: #2a1f3d; }
     .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.08); }
     .cur-check { font-size: 12px; margin-left: auto; opacity: 0; }
@@ -153,43 +113,45 @@
 
     /* Search & Sort */
     .list-controls { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
-    .search-input {
-      flex: 1; background: #17132a; border-radius: 12px; padding: 10px 14px;
-      font-size: 14px; color: #fff; border: none; outline: none; min-width: 0;
-    }
+    .search-input { flex: 1; background: #17132a; border-radius: 12px; padding: 10px 14px; font-size: 14px; color: #fff; border: none; outline: none; min-width: 0; }
     .search-input::placeholder { color: #3d3054; }
-    .sort-select {
-      background: #17132a; border-radius: 12px; padding: 10px 12px;
-      font-size: 13px; color: #a78bfa; cursor: pointer; flex-shrink: 0;
-      appearance: none; -webkit-appearance: none;
-    }
+    .sort-select { background: #17132a; border-radius: 12px; padding: 10px 12px; font-size: 13px; color: #a78bfa; cursor: pointer; flex-shrink: 0; appearance: none; -webkit-appearance: none; }
+
+    /* ── Archive ── */
+    .archive-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 4px 10px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .archive-header:active { opacity: .7; }
+    .archive-title { font-size: 12px; font-weight: 600; color: #6b5a8d; text-transform: uppercase; letter-spacing: .7px; }
+    .archive-arrow { font-size: 12px; color: #6b5a8d; transition: transform .2s; }
+    .archive-arrow.open { transform: rotate(180deg); }
+    .archive-body { display: none; }
+    .archive-body.open { display: block; }
+
+    /* ── Occasion filter chips ── */
+    .occ-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .occ-chip { padding: 6px 13px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #2a2040; background: #17132a; color: #6b5a8d; transition: all .15s; user-select: none; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+    .occ-chip.active { background: #3a1f2f; color: #f472b6; border-color: #5a2f4a; }
+
+    /* ── View toggle ── */
+    .view-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
+    .view-btn { flex: 1; padding: 9px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #2a2040; background: #17132a; color: #6b5a8d; text-align: center; transition: all .15s; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .view-btn.active { background: #2a1f3d; color: #a78bfa; border-color: #3d2f5a; }
+
+    /* ── Person groups ── */
+    .person-group { margin-bottom: 18px; }
+    .person-group-header { font-size: 13px; font-weight: 700; color: #c4b5fd; padding: 0 4px 8px; display: flex; align-items: center; justify-content: space-between; }
+    .person-count { font-size: 12px; color: #6b5a8d; font-weight: 400; }
 
     /* Swipe */
     .swipe-wrap { position: relative; margin-bottom: 10px; border-radius: 16px; overflow: hidden; }
-    .delete-bg {
-      position: absolute; right: 0; top: 0; bottom: 0; width: 80px;
-      background: #5f1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px;
-    }
-    .wish-item {
-      background: #17132a; border-radius: 16px; padding: 12px 14px;
-      display: flex; align-items: center; gap: 10px;
-      position: relative; transition: transform .25s; will-change: transform;
-    }
+    .delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #5f1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .wish-item { background: #17132a; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: relative; transition: transform .25s; will-change: transform; }
     .wish-item.bought { opacity: .55; }
     .wish-item.bought .wish-name { text-decoration: line-through; }
 
-    .wish-check {
-      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
-      border: 2px solid #3d2f5a; display: flex; align-items: center; justify-content: center;
-      font-size: 13px; transition: all .2s; cursor: pointer;
-    }
+    .wish-check { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; border: 2px solid #3d2f5a; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all .2s; cursor: pointer; }
     .wish-item.bought .wish-check { background: #2a1f3d; border-color: #a78bfa; }
 
-    .wish-favicon {
-      width: 38px; height: 38px; border-radius: 10px; background: #1f1835;
-      display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
-      overflow: hidden;
-    }
+    .wish-favicon { width: 38px; height: 38px; border-radius: 10px; background: #1f1835; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; overflow: hidden; }
     .wish-favicon img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 
     .wish-info { flex: 1; min-width: 0; }
@@ -207,27 +169,23 @@
     .badge-red    { background: #3a1f1f; color: #f87171; }
     .badge-yellow { background: #3a3010; color: #fbbf24; }
     .badge-blue   { background: #1f2a3a; color: #60a5fa; }
-    .wish-price { font-size: 13px; font-weight: 700; color: #a78bfa; cursor: pointer; }
+    .wish-price { font-size: 13px; font-weight: 700; color: #a78bfa; }
     .wish-date  { font-size: 11px; color: #4a3a6d; }
+
+    /* ── Price tracking ── */
+    .track-btn { font-size: 10px; background: #1a2a1f; color: #4ade80; padding: 3px 8px; border-radius: 20px; cursor: pointer; border: 1px solid #2a4a30; white-space: nowrap; }
+    .tracking-badge { font-size: 10px; background: #1a2a1f; color: #4ade80; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
 
     /* Gift date badge */
     .date-badge { font-size: 11px; background: #1a2a3f; color: #60a5fa; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
-    .remind-btn {
-      font-size: 11px; background: #2a1f3d; color: #c084fc; padding: 4px 10px;
-      border-radius: 20px; cursor: pointer; border: 1px solid #3d2f5a;
-      white-space: nowrap; margin-top: 4px;
-    }
+    .remind-btn { font-size: 11px; background: #2a1f3d; color: #c084fc; padding: 4px 10px; border-radius: 20px; cursor: pointer; border: 1px solid #3d2f5a; white-space: nowrap; margin-top: 4px; }
+    .occ-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; background: #3a1f2f; color: #f472b6; }
 
     .empty { text-align: center; padding: 50px 20px; color: #4a3a6d; }
     .empty-icon { font-size: 44px; margin-bottom: 10px; }
     .empty-text { font-size: 15px; }
 
-    .toast {
-      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: #2a1f3d; color: #a78bfa; border: 1px solid #3d2f5a;
-      border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 600;
-      opacity: 0; transition: all .3s; pointer-events: none; white-space: nowrap; z-index: 200;
-    }
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: #2a1f3d; color: #a78bfa; border: 1px solid #3d2f5a; border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; pointer-events: none; white-space: nowrap; z-index: 200; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── Profile ── */
@@ -238,37 +196,26 @@
     .stat-box { flex: 1; background: #17132a; border-radius: 16px; padding: 16px 12px; text-align: center; }
     .stat-num { font-size: 24px; font-weight: 700; color: #a78bfa; }
     .stat-lbl { font-size: 12px; color: #6b5a8d; margin-top: 4px; }
-
     .stat-sum-card { background: #17132a; border-radius: 16px; padding: 16px 18px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
     .stat-sum-label { font-size: 13px; color: #6b5a8d; }
     .stat-sum-value { font-size: 22px; font-weight: 700; color: #a78bfa; }
-
     .stat-progress { margin-top: 10px; background: #17132a; border-radius: 16px; padding: 14px 18px; }
     .prog-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
     .prog-lbl { color: #6b5a8d; }
     .prog-val { color: #a78bfa; font-weight: 600; }
     .prog-bar { height: 6px; background: #2a1f3d; border-radius: 3px; overflow: hidden; }
     .prog-fill { height: 100%; background: linear-gradient(90deg,#7c3aed,#a78bfa); border-radius: 3px; transition: width .5s; }
-
     .top-cats-card { background: #17132a; border-radius: 16px; overflow: hidden; margin-top: 10px; }
     .top-cat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; }
     .top-cat-row + .top-cat-row { border-top: 1px solid rgba(255,255,255,.05); }
     .top-cat-name { font-size: 14px; }
     .top-cat-count { font-size: 13px; color: #6b5a8d; }
-    .top-cat-bar { height: 4px; background: #2a1f3d; border-radius: 2px; margin-top: 4px; overflow: hidden; flex: 1; margin: 0 12px; }
+    .top-cat-bar { height: 4px; background: #2a1f3d; border-radius: 2px; flex: 1; margin: 0 12px; overflow: hidden; }
     .top-cat-fill { height: 100%; border-radius: 2px; }
-
-    /* ── Sync buttons ── */
-    .sync-btn {
-      width: 100%; padding: 15px; border-radius: 16px; font-size: 15px;
-      font-weight: 600; cursor: pointer; border: none; margin-bottom: 8px;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      -webkit-tap-highlight-color: transparent;
-    }
+    .sync-btn { width: 100%; padding: 15px; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; -webkit-tap-highlight-color: transparent; }
     .sync-export { background: #2a1f3d; color: #a78bfa; }
     .sync-import { background: #1f2a3a; color: #60a5fa; }
-    .sync-export:active { opacity: .8; }
-    .sync-import:active { opacity: .8; }
+    .sync-export:active, .sync-import:active { opacity: .8; }
   </style>
 </head>
 <body>
@@ -302,8 +249,20 @@
 
   <div class="row2">
     <div>
-      <div class="section-label">Цена (BYN)</div>
-      <div class="card"><div class="field"><input id="price" type="number" placeholder="0" min="0" autocomplete="off" /></div></div>
+      <div class="section-label">Цена</div>
+      <div class="card"><div class="field">
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
+          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+            <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+            <div class="cur-drop">
+              <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+              <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
+              <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div></div>
     </div>
     <div>
       <div class="section-label">Категория</div>
@@ -353,16 +312,25 @@
       <option value="price-asc">Дешевле</option>
       <option value="price-desc">Дороже</option>
     </select>
-    <div class="cur-btn" id="curBtn" onclick="toggleCurDrop(event)">
-      <span id="curLabel">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
-      <div class="cur-drop" id="curDrop">
-        <div class="cur-opt sel" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+    <div class="cur-btn" onclick="toggleCurDrop(event)">
+      <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+      <div class="cur-drop">
+        <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
         <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
         <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
       </div>
     </div>
   </div>
   <div id="list-all"></div>
+
+  <!-- Archive section -->
+  <div id="archiveSection" style="display:none">
+    <div class="archive-header" onclick="toggleArchive()">
+      <span class="archive-title">🗄 Куплено (<span id="archiveCount">0</span>)</span>
+      <span class="archive-arrow" id="archiveArrow">▼</span>
+    </div>
+    <div class="archive-body" id="archiveBody"></div>
+  </div>
 </div>
 
 <!-- ══ Крупные ══ -->
@@ -399,10 +367,33 @@
       <div class="card"><div class="field"><input id="g-who" type="text" placeholder="Маме, другу..." autocomplete="off" /></div></div>
     </div>
     <div>
-      <div class="section-label">Цена (BYN)</div>
-      <div class="card"><div class="field"><input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" /></div></div>
+      <div class="section-label">Цена</div>
+      <div class="card"><div class="field">
+        <div style="display:flex;align-items:center;gap:8px">
+          <input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
+          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+            <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+            <div class="cur-drop">
+              <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+              <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
+              <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div></div>
     </div>
   </div>
+
+  <div class="section-label">Повод</div>
+  <div class="quick-tags" id="occQuickTags">
+    <div class="tag-chip" data-occ="ДР">🎂 ДР</div>
+    <div class="tag-chip" data-occ="НГ">🎄 НГ</div>
+    <div class="tag-chip" data-occ="Свадьба">💍 Свадьба</div>
+    <div class="tag-chip" data-occ="8 Марта">🌸 8 Марта</div>
+    <div class="tag-chip" data-occ="23 Февраля">💪 23 Фев</div>
+    <div class="tag-chip" data-occ="ДР друга">🎉 ДР друга</div>
+  </div>
+  <input id="g-occ" type="hidden" value="" />
 
   <div class="section-label">Ссылка</div>
   <div class="card"><div class="field"><input id="g-url" type="url" placeholder="https://..." autocomplete="off" spellcheck="false" /></div></div>
@@ -426,6 +417,21 @@
   <div class="section-label">Заметки</div>
   <div class="card"><div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div></div>
   <div style="height:14px"></div>
+
+  <!-- Gifts list controls -->
+  <div class="view-toggle">
+    <div class="view-btn active" data-v="list" onclick="setGiftsView('list',this)">📋 Список</div>
+    <div class="view-btn" data-v="person" onclick="setGiftsView('person',this)">👥 По людям</div>
+  </div>
+  <div class="occ-chips" id="occFilter">
+    <div class="occ-chip active" data-occ="">Все</div>
+    <div class="occ-chip" data-occ="ДР">🎂 ДР</div>
+    <div class="occ-chip" data-occ="НГ">🎄 НГ</div>
+    <div class="occ-chip" data-occ="Свадьба">💍 Свадьба</div>
+    <div class="occ-chip" data-occ="8 Марта">🌸 8 Марта</div>
+    <div class="occ-chip" data-occ="23 Февраля">💪 23 Фев</div>
+    <div class="occ-chip" data-occ="ДР друга">🎉 ДР друга</div>
+  </div>
   <div id="list-gifts"></div>
 </div>
 
@@ -446,8 +452,13 @@
       <div class="stat-sum-label">Сумма хотелок</div>
       <div class="stat-sum-value" id="statSum">0 Br</div>
     </div>
-    <div class="cur-btn" id="curBtnProfile" onclick="toggleCurDrop(event)">
-      <span id="curLabelProfile">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+    <div class="cur-btn" onclick="toggleCurDrop(event)">
+      <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+      <div class="cur-drop">
+        <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+        <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
+        <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+      </div>
     </div>
   </div>
 
@@ -467,14 +478,14 @@
   <div class="section-label" style="margin-top:20px">О приложении</div>
   <div class="card"><div class="field" style="color:#6b5a8d;font-size:14px;line-height:1.6">
     Данные хранятся локально на этом устройстве.<br>
-    Используй экспорт/импорт для переноса на другое устройство.<br>
-    Напоминания о подарках работают через бот.
+    Экспорт/импорт для переноса между устройствами.<br>
+    Напоминания и слежка за ценой — через бот.
   </div></div>
 </div>
 
 <nav class="bottom-nav">
   <div class="nav-item active" data-tab="home"><div class="nav-icon">🏠</div><div class="nav-label">Главная</div><div class="nav-dot"></div></div>
-  <div class="nav-item" data-tab="all"><div class="nav-icon">⭐</div><div class="nav-label">Все хотелки</div><div class="nav-dot"></div></div>
+  <div class="nav-item" data-tab="all"><div class="nav-icon">⭐</div><div class="nav-label">Хотелки</div><div class="nav-dot"></div></div>
   <div class="nav-item" data-tab="big"><div class="nav-icon">💎</div><div class="nav-label">Крупные</div><div class="nav-dot"></div></div>
   <div class="nav-item" data-tab="gifts"><div class="nav-icon">🎁</div><div class="nav-label">Подарки</div><div class="nav-dot"></div></div>
   <div class="nav-item" data-tab="profile"><div class="nav-icon">👤</div><div class="nav-label">Профиль</div><div class="nav-dot"></div></div>
@@ -505,34 +516,23 @@
   }
 
   function updateCurUI() {
-    document.querySelectorAll('.cur-label, #curLabelProfile').forEach(el => el.textContent = activeCur);
-    document.querySelectorAll('.cur-opt').forEach(el => {
-      el.classList.toggle('sel', el.dataset.cur === activeCur);
-    });
+    document.querySelectorAll('.cur-label').forEach(el => el.textContent = activeCur);
+    document.querySelectorAll('.cur-opt').forEach(el => el.classList.toggle('sel', el.dataset.cur === activeCur));
     localStorage.setItem('currency', activeCur);
   }
-
   function toggleCurDrop(e) {
     e.stopPropagation();
-    // Close any open drop first
-    document.querySelectorAll('.cur-drop.open').forEach(d => {
-      if (!e.currentTarget.contains(d)) d.classList.remove('open');
-    });
+    document.querySelectorAll('.cur-drop.open').forEach(d => { if (!e.currentTarget.contains(d)) d.classList.remove('open'); });
     const drop = e.currentTarget.querySelector('.cur-drop');
     if (drop) drop.classList.toggle('open');
   }
-
   function setCur(cur, e) {
     e.stopPropagation();
-    activeCur = cur;
-    updateCurUI();
+    activeCur = cur; updateCurUI();
     document.querySelectorAll('.cur-drop').forEach(d => d.classList.remove('open'));
     refresh();
   }
-
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.cur-drop.open').forEach(d => d.classList.remove('open'));
-  });
+  document.addEventListener('click', () => document.querySelectorAll('.cur-drop.open').forEach(d => d.classList.remove('open')));
 
   // ── Tag colors ──
   const TAG_COLORS = {
@@ -551,11 +551,16 @@
     return { bg:`hsl(${hue},35%,14%)`, color:`hsl(${hue},65%,65%)`, border:`hsl(${hue},35%,22%)` };
   }
   function applyChipColors() {
-    document.querySelectorAll('.tag-chip').forEach(chip => {
+    document.querySelectorAll('.tag-chip[data-tag]').forEach(chip => {
       const tc = tagColor(chip.dataset.tag);
-      chip.style.background = chip.classList.contains('selected') ? tc.bg : '#17132a';
-      chip.style.color       = chip.classList.contains('selected') ? tc.color : '#7a6a9d';
-      chip.style.borderColor = chip.classList.contains('selected') ? tc.border : '#2a2040';
+      chip.style.background   = chip.classList.contains('selected') ? tc.bg    : '#17132a';
+      chip.style.color        = chip.classList.contains('selected') ? tc.color : '#7a6a9d';
+      chip.style.borderColor  = chip.classList.contains('selected') ? tc.border: '#2a2040';
+    });
+    document.querySelectorAll('.tag-chip[data-occ]').forEach(chip => {
+      chip.style.background   = chip.classList.contains('selected') ? '#3a1f2f' : '#17132a';
+      chip.style.color        = chip.classList.contains('selected') ? '#f472b6' : '#7a6a9d';
+      chip.style.borderColor  = chip.classList.contains('selected') ? '#5a2f4a' : '#2a2040';
     });
   }
 
@@ -571,8 +576,7 @@
   document.getElementById('prioPills').addEventListener('click', e => {
     const pill = e.target.closest('.prio-pill'); if (!pill) return;
     document.querySelectorAll('.prio-pill').forEach(p => p.classList.remove('sel'));
-    pill.classList.add('sel');
-    activePrio = pill.dataset.p;
+    pill.classList.add('sel'); activePrio = pill.dataset.p;
   });
 
   // ── Storage ──
@@ -582,63 +586,55 @@
   const saveGifts = l => localStorage.setItem('gifts',  JSON.stringify(l));
 
   // ── Helpers ──
-  const showToast = msg => {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
-  };
+  const showToast = msg => { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); };
   const getDomain  = url => { try{return new URL(url).hostname.replace('www.','');}catch{return '';} };
-  const parsePrice = s => { if(!s && s!==0)return Infinity; const n=parseFloat(String(s).replace(/[^\d.]/g,'')); return isNaN(n)?Infinity:n; };
+  const parsePrice = s => { if(!s&&s!==0)return Infinity; const n=parseFloat(String(s).replace(/[^\d.]/g,'')); return isNaN(n)?Infinity:n; };
   const plural     = (n,a,b,c) => { const m=n%100; if(m>=11&&m<=19)return c; const m2=n%10; if(m2===1)return a; if(m2>=2&&m2<=4)return b; return c; };
   const today      = () => new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
   const faviconUrl = url => { const d=getDomain(url); return d?`https://www.google.com/s2/favicons?domain=${d}&sz=64`:''; };
+  const getEmoji   = tags => { const m={одежда:'👕',техника:'💻',книги:'📚',дизайн:'🎨',путешествия:'✈️',хобби:'🎯',frontend:'💻'}; for(const t of(tags||[]))if(m[t])return m[t]; return '✨'; };
+  const openUrl    = url => window.open(url,'_blank');
 
   function tagBadges(tags) {
-    return (tags||[]).map(t => {
-      const tc = tagColor(t);
-      return `<span class="wish-tag" style="background:${tc.bg};color:${tc.color}">${t}</span>`;
-    }).join('');
+    return (tags||[]).map(t => { const tc=tagColor(t); return `<span class="wish-tag" style="background:${tc.bg};color:${tc.color}">${t}</span>`; }).join('');
   }
-
   function formatDate(dateStr) {
     if (!dateStr) return '';
-    try { return new Date(dateStr).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}); }
-    catch { return dateStr; }
+    try { return new Date(dateStr).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}); } catch { return dateStr; }
   }
 
   // ── Filter & Sort ──
   function applyFilter(list, query, sortVal) {
     let res = list;
-    if (query) {
-      const q = query.toLowerCase();
-      res = res.filter(w => w.title.toLowerCase().includes(q) || (w.tags||[]).some(t=>t.toLowerCase().includes(q)));
-    }
+    if (query) { const q=query.toLowerCase(); res=res.filter(w=>w.title.toLowerCase().includes(q)||(w.tags||[]).some(t=>t.toLowerCase().includes(q))); }
     if (sortVal==='price-asc')  res=[...res].sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
     if (sortVal==='price-desc') res=[...res].sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
     if (sortVal==='prio')       res=[...res].sort((a,b)=>(PRIO_ORDER[a.priority||'']??3)-(PRIO_ORDER[b.priority||'']??3));
     return res;
   }
 
-  // ── Render ──
-  const getEmoji = tags => {
-    const m={одежда:'👕',техника:'💻',книги:'📚',дизайн:'🎨',путешествия:'✈️',хобби:'🎯',frontend:'💻'};
-    for(const t of(tags||[]))if(m[t])return m[t]; return '✨';
-  };
-  const openUrl = url => window.open(url,'_blank');
-
-  function wishHTML(w) {
+  // ── Wish card HTML ──
+  function wishHTML(w, inArchive=false) {
     const bought = w.bought ? 'bought' : '';
     const check  = w.bought ? '✓' : '';
     let topBadge;
-    if (w.bought) topBadge = '<span class="wish-badge badge-green">✅ Куплено</span>';
+    if (w.bought)                       topBadge = '<span class="wish-badge badge-green">✅ Куплено</span>';
     else if (w.priority && PRIO_BADGE[w.priority]) topBadge = PRIO_BADGE[w.priority];
-    else if (w.big) topBadge = '<span class="wish-badge badge-gold">💎</span>';
-    else topBadge = '<span class="wish-badge badge-purple">⭐</span>';
+    else if (w.big)                     topBadge = '<span class="wish-badge badge-gold">💎</span>';
+    else                                topBadge = '<span class="wish-badge badge-purple">⭐</span>';
 
     const priceStr = formatPrice(w.price);
     const faviconInner = w.url
       ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />`
       : (w.tags&&w.tags.length ? getEmoji(w.tags) : '✨');
+
+    // Price track button: only for active (not bought) wishes with url + price
+    const canTrack = !w.bought && w.url && w.price && parsePrice(w.price) < Infinity;
+    const trackHtml = canTrack
+      ? (w.tracking
+          ? `<span class="tracking-badge">💸 Слежу</span>`
+          : `<div class="track-btn" onclick="trackPrice(event,'${w.id}')">💸 Следить</div>`)
+      : '';
 
     return `
       <div class="swipe-wrap" data-id="${w.id}">
@@ -654,16 +650,19 @@
           <div class="wish-right">
             ${topBadge}
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
+            ${trackHtml}
             <span class="wish-date">${w.date||''}</span>
           </div>
         </div>
       </div>`;
   }
 
+  // ── Gift card HTML ──
   function giftHTML(g) {
-    const dateStr  = g.eventDate ? formatDate(g.eventDate) : '';
+    const dateStr   = g.eventDate ? formatDate(g.eventDate) : '';
     const remindStr = g.remindDays && g.eventDate ? `🔔 за ${g.remindDays} дн.` : '';
     const priceStr  = formatPrice(g.price);
+    const occBadge  = g.occasion ? `<span class="occ-badge">${g.occasion}</span>` : '';
     return `
       <div class="swipe-wrap" data-id="${g.id}">
         <div class="delete-bg" onclick="deleteItem('${g.id}','gift')">🗑</div>
@@ -672,7 +671,10 @@
           <div class="wish-info" onclick="${g.url?`openUrl('${g.url}')`:``}">
             <div class="wish-name">${g.title}</div>
             <div class="wish-domain">${g.who ? '→ '+g.who : (g.url ? getDomain(g.url) : '—')}</div>
-            ${dateStr ? `<div class="wish-tags"><span class="date-badge">📅 ${dateStr}</span></div>` : ''}
+            <div class="wish-tags">
+              ${dateStr ? `<span class="date-badge">📅 ${dateStr}</span>` : ''}
+              ${occBadge}
+            </div>
           </div>
           <div class="wish-right">
             <span class="wish-badge badge-pink">🎁</span>
@@ -683,66 +685,124 @@
       </div>`;
   }
 
-  function renderList(id, list, empty) {
-    const el = document.getElementById(id);
-    el.innerHTML = list.length
-      ? list.map(wishHTML).join('')
-      : `<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">${empty}</div></div>`;
+  // ── Gifts view state ──
+  let giftsView     = 'list';
+  let activeOccasion = '';
+
+  function setGiftsView(v, btn) {
+    giftsView = v;
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    refresh();
+  }
+
+  document.getElementById('occFilter').addEventListener('click', e => {
+    const chip = e.target.closest('.occ-chip'); if (!chip) return;
+    document.querySelectorAll('#occFilter .occ-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeOccasion = chip.dataset.occ;
+    refresh();
+  });
+
+  function renderGiftsByPerson(gifts) {
+    if (!gifts.length) return '<div class="empty"><div class="empty-icon">🎁</div><div class="empty-text">Нет подарков</div></div>';
+    const groups = {};
+    gifts.forEach(g => {
+      const key = g.who || '—';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(g);
+    });
+    return Object.entries(groups).map(([who, list]) => `
+      <div class="person-group">
+        <div class="person-group-header">
+          <span>${who === '—' ? 'Без получателя' : '👤 '+who}</span>
+          <span class="person-count">${list.length} ${plural(list.length,'идея','идеи','идей')}</span>
+        </div>
+        ${list.map(g => giftHTML(g)).join('')}
+      </div>`).join('');
+  }
+
+  // ── Archive ──
+  let archiveOpen = false;
+  function toggleArchive() {
+    archiveOpen = !archiveOpen;
+    document.getElementById('archiveBody').classList.toggle('open', archiveOpen);
+    document.getElementById('archiveArrow').classList.toggle('open', archiveOpen);
+  }
+
+  // ── Refresh ──
+  function refresh() {
+    const wishes  = load();
+    const active  = wishes.filter(w => !w.bought);
+    const bought  = wishes.filter(w => w.bought);
+    const big     = active.filter(w => w.big);
+    const gifts   = loadGifts();
+    const qA = document.getElementById('search-all')?.value||'';
+    const qB = document.getElementById('search-big')?.value||'';
+    const sA = document.getElementById('sort-all')?.value||'date';
+    const sB = document.getElementById('sort-big')?.value||'date';
+
+    // Active lists
+    const allEl = document.getElementById('list-all');
+    const filtered = applyFilter(active, qA, sA);
+    allEl.innerHTML = filtered.length
+      ? filtered.map(w => wishHTML(w)).join('')
+      : `<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">Пока пусто — добавь первую хотелку</div></div>`;
+
+    const bigEl = document.getElementById('list-big');
+    const filteredBig = applyFilter(big, qB, sB);
+    bigEl.innerHTML = filteredBig.length
+      ? filteredBig.map(w => wishHTML(w)).join('')
+      : `<div class="empty"><div class="empty-icon">💎</div><div class="empty-text">Нет крупных хотелок</div></div>`;
+
+    // Archive section
+    const archSec = document.getElementById('archiveSection');
+    archSec.style.display = bought.length ? '' : 'none';
+    document.getElementById('archiveCount').textContent = bought.length;
+    document.getElementById('archiveBody').innerHTML = bought.map(w => wishHTML(w, true)).join('');
+
+    // Gifts
+    const filteredGifts = activeOccasion
+      ? gifts.filter(g => g.occasion === activeOccasion)
+      : gifts;
+    const giftsEl = document.getElementById('list-gifts');
+    if (!filteredGifts.length) {
+      giftsEl.innerHTML = `<div class="empty"><div class="empty-icon">🎁</div><div class="empty-text">Нет подарков</div></div>`;
+    } else if (giftsView === 'person') {
+      giftsEl.innerHTML = renderGiftsByPerson(filteredGifts);
+    } else {
+      giftsEl.innerHTML = filteredGifts.map(giftHTML).join('');
+    }
+
+    // Subtitles
+    document.getElementById('sub-all').textContent   = active.length+' '+plural(active.length,'желание','желания','желаний');
+    document.getElementById('sub-big').textContent   = big.length+' '+plural(big.length,'желание','желания','желаний');
+    document.getElementById('sub-gifts').textContent = gifts.length+' '+plural(gifts.length,'идея','идеи','идей');
+
+    // Stats
+    renderStats(wishes);
+    applyChipColors(); updateCurUI(); initSwipe();
   }
 
   function renderStats(wishes) {
     const bought = wishes.filter(w => w.bought);
     const big    = wishes.filter(w => w.big);
-
-    // Sum (in BYN)
-    const sumBYN = wishes.reduce((acc, w) => {
-      const n = parsePrice(w.price); return acc + (n === Infinity ? 0 : n);
-    }, 0);
-    document.getElementById('statAll').textContent   = wishes.length;
-    document.getElementById('statBig').textContent   = big.length;
-    document.getElementById('statBought').textContent= bought.length;
-    document.getElementById('statSum').textContent   = formatPrice(sumBYN) || `0 ${CUR_SYM[activeCur]}`;
-
-    // Progress
-    const pct = wishes.length ? Math.round(bought.length / wishes.length * 100) : 0;
-    document.getElementById('progText').textContent = pct + '%';
-    document.getElementById('progFill').style.width = pct + '%';
-
-    // Top categories
+    const sumBYN = wishes.reduce((acc,w) => { const n=parsePrice(w.price); return acc+(n===Infinity?0:n); }, 0);
+    document.getElementById('statAll').textContent    = wishes.length;
+    document.getElementById('statBig').textContent    = big.length;
+    document.getElementById('statBought').textContent = bought.length;
+    document.getElementById('statSum').textContent    = formatPrice(sumBYN) || `0 ${CUR_SYM[activeCur]}`;
+    const pct = wishes.length ? Math.round(bought.length/wishes.length*100) : 0;
+    document.getElementById('progText').textContent = pct+'%';
+    document.getElementById('progFill').style.width  = pct+'%';
     const catMap = {};
-    wishes.forEach(w => (w.tags||[]).forEach(t => { catMap[t] = (catMap[t]||0)+1; }));
+    wishes.forEach(w => (w.tags||[]).forEach(t => { catMap[t]=(catMap[t]||0)+1; }));
     const sorted = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
     const maxCount = sorted[0]?.[1] || 1;
     const topEl = document.getElementById('topCats');
-    if (!sorted.length) {
-      topEl.innerHTML = '<div class="top-cat-row" style="color:#4a3a6d;font-size:14px">Нет категорий</div>';
-    } else {
-      topEl.innerHTML = sorted.map(([name, cnt]) => {
-        const tc = tagColor(name);
-        const barPct = Math.round(cnt / maxCount * 100);
-        return `<div class="top-cat-row">
-          <span style="font-size:14px;color:${tc.color}">${name}</span>
-          <div class="top-cat-bar"><div class="top-cat-fill" style="width:${barPct}%;background:${tc.color}"></div></div>
-          <span class="top-cat-count">${cnt}</span>
-        </div>`;
-      }).join('');
-    }
-  }
-
-  function refresh() {
-    const wishes = load(), big = wishes.filter(w=>w.big), gifts=loadGifts();
-    const qA=document.getElementById('search-all')?.value||'', qB=document.getElementById('search-big')?.value||'';
-    const sA=document.getElementById('sort-all')?.value||'date', sB=document.getElementById('sort-big')?.value||'date';
-    renderList('list-all', applyFilter(wishes,qA,sA), 'Пока пусто — добавь первую хотелку');
-    renderList('list-big', applyFilter(big,qB,sB), 'Нет крупных хотелок');
-    document.getElementById('list-gifts').innerHTML = gifts.length ? gifts.map(giftHTML).join('') : '';
-    document.getElementById('sub-all').textContent   = wishes.length+' '+plural(wishes.length,'желание','желания','желаний');
-    document.getElementById('sub-big').textContent   = big.length+' '+plural(big.length,'желание','желания','желаний');
-    document.getElementById('sub-gifts').textContent = gifts.length+' '+plural(gifts.length,'идея','идеи','идей');
-    renderStats(wishes);
-    applyChipColors();
-    updateCurUI();
-    initSwipe();
+    topEl.innerHTML = sorted.length
+      ? sorted.map(([name,cnt]) => { const tc=tagColor(name); const barPct=Math.round(cnt/maxCount*100); return `<div class="top-cat-row"><span style="font-size:14px;color:${tc.color}">${name}</span><div class="top-cat-bar"><div class="top-cat-fill" style="width:${barPct}%;background:${tc.color}"></div></div><span class="top-cat-count">${cnt}</span></div>`; }).join('')
+      : '<div class="top-cat-row" style="color:#4a3a6d;font-size:14px">Нет категорий</div>';
   }
 
   // ── Delete & bought ──
@@ -753,74 +813,78 @@
   }
   function toggleBought(e, id) {
     e.stopPropagation();
-    const list=load(), w=list.find(w=>String(w.id)===String(id)); if(!w)return;
-    w.bought=!w.bought; save(list); refresh();
-    showToast(w.bought?'✅ Отмечено купленным!':'↩️ Снято');
+    const list=load(), w=list.find(w=>String(w.id)===String(id)); if(!w) return;
+    w.bought=!w.bought;
+    if(w.bought) w.boughtDate=today();
+    save(list); refresh();
+    showToast(w.bought?'✅ В архив!':'↩️ Возвращено');
   }
 
-  // ── Register reminder via sendData ──
+  // ── Price tracking ──
+  function trackPrice(e, id) {
+    e.stopPropagation();
+    if (!tg) { showToast('❌ Только в Telegram'); return; }
+    const list=load(), w=list.find(w=>String(w.id)===String(id)); if(!w) return;
+    tg.showConfirm(
+      `Отслеживать снижение цены?\n\n🛍 ${w.title}\n💰 ${formatPrice(w.price)}\n\n(Приложение закроется)`,
+      ok => {
+        if (!ok) return;
+        w.tracking = true; save(list);
+        tg.sendData(JSON.stringify({ type:'trackPrice', id:w.id, title:w.title, url:w.url, price:parsePrice(w.price) }));
+      }
+    );
+  }
+
+  // ── Reminder ──
   function registerReminder(e, id) {
     e.stopPropagation();
     if (!tg) return;
-    const gift = loadGifts().find(g=>String(g.id)===String(id));
-    if (!gift) return;
-    const dateFormatted = formatDate(gift.eventDate);
+    const gift=loadGifts().find(g=>String(g.id)===String(id)); if(!gift) return;
     tg.showConfirm(
-      `Зарегистрировать напоминание?\n\n🎁 ${gift.title}\n📅 ${dateFormatted}\n🔔 За ${gift.remindDays} дней\n\n(Приложение закроется)`,
-      ok => { if(ok) tg.sendData(JSON.stringify({ type:'reminder', id:gift.id, title:gift.title, who:gift.who||'', eventDate:gift.eventDate, remindDays:gift.remindDays })); }
+      `Зарегистрировать напоминание?\n\n🎁 ${gift.title}\n📅 ${formatDate(gift.eventDate)}\n🔔 За ${gift.remindDays} дней\n\n(Приложение закроется)`,
+      ok => { if(ok) tg.sendData(JSON.stringify({type:'reminder', id:gift.id, title:gift.title, who:gift.who||'', eventDate:gift.eventDate, remindDays:gift.remindDays})); }
     );
   }
 
   // ── Export / Import ──
   function exportData() {
-    const data = { version: 1, wishes: load(), gifts: loadGifts(), exportedAt: new Date().toISOString() };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url; a.download = `wishlist-${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    const data={version:1, wishes:load(), gifts:loadGifts(), exportedAt:new Date().toISOString()};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url; a.download=`wishlist-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     showToast('📤 Экспорт готов!');
   }
-
   function importData(input) {
-    const file = input.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
+    const file=input.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=e=>{
       try {
-        const data = JSON.parse(e.target.result);
-        const wishes = data.wishes || data; // support both {wishes:[]} and plain []
-        const gifts  = data.gifts  || [];
-        if (!Array.isArray(wishes)) throw new Error('invalid');
-        const merge = confirm
-          ? confirm(`Импортировать ${wishes.length} хотелок и ${gifts.length} подарков?\n\nСуществующие данные будут заменены.`)
-          : true;
-        if (!merge) return;
+        const data=JSON.parse(e.target.result);
+        const wishes=data.wishes||data, gifts=data.gifts||[];
+        if(!Array.isArray(wishes)) throw new Error('invalid');
+        if(!confirm(`Импортировать ${wishes.length} хотелок и ${gifts.length} подарков?\n\nДанные будут заменены.`)) return;
         save(wishes); saveGifts(gifts); refresh();
-        showToast(`✅ Импортировано: ${wishes.length} хотелок`);
-      } catch { showToast('❌ Ошибка формата файла'); }
+        showToast(`✅ Импортировано: ${wishes.length}`);
+      } catch { showToast('❌ Ошибка формата'); }
     };
-    reader.readAsText(file);
-    input.value = '';
+    reader.readAsText(file); input.value='';
   }
 
   // ── Swipe ──
   function initSwipe() {
     document.querySelectorAll('.wish-item').forEach(el => {
       let sx=0, sy=0, drag=false;
-      el.addEventListener('touchstart', e=>{sx=e.touches[0].clientX; sy=e.touches[0].clientY; drag=false;},{passive:true});
-      el.addEventListener('touchmove', e=>{
+      el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;drag=false;},{passive:true});
+      el.addEventListener('touchmove',e=>{
         const dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
-        if(!drag&&Math.abs(dy)>Math.abs(dx))return;
-        if(dx>0)return; drag=true;
+        if(!drag&&Math.abs(dy)>Math.abs(dx))return; if(dx>0)return; drag=true;
         el.style.transform=`translateX(${Math.max(dx,-80)}px)`; e.preventDefault();
       },{passive:false});
-      el.addEventListener('touchend', e=>{
+      el.addEventListener('touchend',e=>{
         const dx=e.changedTouches[0].clientX-sx;
-        if(dx<-55){
-          el.style.cssText='transform:translateX(-100%);opacity:0;transition:transform .25s,opacity .25s';
-          setTimeout(()=>deleteItem(el.dataset.id, el.dataset.type),250);
-        } else { el.style.transform=''; }
+        if(dx<-55){ el.style.cssText='transform:translateX(-100%);opacity:0;transition:transform .25s,opacity .25s'; setTimeout(()=>deleteItem(el.dataset.id,el.dataset.type),250); }
+        else el.style.transform='';
       },{passive:true});
     });
   }
@@ -859,50 +923,58 @@
 
   titleEl.addEventListener('input', syncBtn);
 
-  // URL preview
+  // URL preview + duplicate check
   let previewTimer=null;
   urlEl.addEventListener('input',()=>{
     const v=urlEl.value.trim();
     clearBtn.style.display=v?'flex':'none';
-    if(!v){statusEl.textContent=''; document.getElementById('urlPreview').classList.remove('show'); return;}
+    if(!v){ statusEl.textContent=''; statusEl.className='status'; document.getElementById('urlPreview').classList.remove('show'); return; }
     clearTimeout(previewTimer);
     previewTimer=setTimeout(()=>{
-      if(isUrl(v)){
-        const domain=getDomain(v);
-        document.getElementById('previewFavicon').src=`https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-        document.getElementById('previewTitle').textContent=domain;
-        document.getElementById('urlPreview').classList.add('show');
-      }
+      if(!isUrl(v)) return;
+      // Duplicate check
+      const existing=load().find(w=>w.url&&w.url.trim()===v);
+      if(existing){ statusEl.className='status warn'; statusEl.textContent=`⚠️ Уже сохранено: «${existing.title}»`; }
+      else { statusEl.className='status'; statusEl.textContent=''; }
+      // Favicon preview
+      const domain=getDomain(v);
+      document.getElementById('previewFavicon').src=`https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+      document.getElementById('previewTitle').textContent=domain;
+      document.getElementById('urlPreview').classList.add('show');
     },400);
   });
   clearBtn.addEventListener('click',()=>{
-    urlEl.value=''; clearBtn.style.display='none'; statusEl.textContent='';
+    urlEl.value=''; clearBtn.style.display='none'; statusEl.textContent=''; statusEl.className='status';
     document.getElementById('urlPreview').classList.remove('show'); urlEl.focus();
   });
 
   document.getElementById('quickTags').addEventListener('click',e=>{
-    const chip=e.target.closest('.tag-chip'); if(!chip)return;
+    const chip=e.target.closest('.tag-chip'); if(!chip) return;
     chip.classList.toggle('selected');
     const tag=chip.dataset.tag, cur=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
-    const idx=cur.indexOf(tag);
-    if(idx===-1)cur.push(tag); else cur.splice(idx,1);
-    tagsEl.value=cur.join(', ');
-    applyChipColors();
+    const idx=cur.indexOf(tag); if(idx===-1)cur.push(tag); else cur.splice(idx,1);
+    tagsEl.value=cur.join(', '); applyChipColors();
   });
   tagsEl.addEventListener('input',()=>{
     const cur=tagsEl.value.split(',').map(t=>t.trim());
-    document.querySelectorAll('.tag-chip').forEach(c=>c.classList.toggle('selected',cur.includes(c.dataset.tag)));
+    document.querySelectorAll('.tag-chip[data-tag]').forEach(c=>c.classList.toggle('selected',cur.includes(c.dataset.tag)));
+    applyChipColors();
+  });
+
+  // Occasion chips in gift form
+  document.getElementById('occQuickTags').addEventListener('click', e => {
+    const chip=e.target.closest('.tag-chip'); if(!chip) return;
+    const isSelected=chip.classList.contains('selected');
+    document.querySelectorAll('#occQuickTags .tag-chip').forEach(c=>c.classList.remove('selected'));
+    if(!isSelected){ chip.classList.add('selected'); document.getElementById('g-occ').value=chip.dataset.occ; }
+    else document.getElementById('g-occ').value='';
     applyChipColors();
   });
 
   if(navigator.clipboard?.readText){
     navigator.clipboard.readText().then(text=>{
       const t=text?.trim();
-      if(t&&isUrl(t)&&!urlEl.value){
-        urlEl.value=t; clearBtn.style.display='flex';
-        statusEl.className='status ok'; statusEl.textContent='📋 Вставлено из буфера';
-        urlEl.dispatchEvent(new Event('input'));
-      }
+      if(t&&isUrl(t)&&!urlEl.value){ urlEl.value=t; clearBtn.style.display='flex'; statusEl.className='status ok'; statusEl.textContent='📋 Вставлено из буфера'; urlEl.dispatchEvent(new Event('input')); }
     }).catch(()=>{});
   }
 
@@ -910,34 +982,25 @@
 
   // ── Save wish ──
   function saveWish(){
-    const title=titleEl.value.trim(); if(!title)return;
+    const title=titleEl.value.trim(); if(!title) return;
     const tags=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
     const list=load();
-    list.unshift({
-      id:Date.now(), title,
-      url:urlEl.value.trim(),
-      price:priceEl.value.trim(),
-      tags, notes:notesEl.value.trim(),
-      big:isBigEl.checked, bought:false,
-      priority:activePrio,
-      date:today()
-    });
+    list.unshift({ id:Date.now(), title, url:urlEl.value.trim(), price:priceEl.value.trim(), tags, notes:notesEl.value.trim(), big:isBigEl.checked, bought:false, priority:activePrio, date:today() });
     save(list); refresh();
-    const emoji = activePrio==='urgent'?'🔴':activePrio==='important'?'🟡':isBigEl.checked?'💎':'✨';
+    const emoji=activePrio==='urgent'?'🔴':activePrio==='important'?'🟡':isBigEl.checked?'💎':'✨';
     showToast(`${emoji} Хотелка сохранена!`);
     titleEl.value=''; urlEl.value=''; priceEl.value=''; tagsEl.value=''; notesEl.value=''; isBigEl.checked=false;
-    clearBtn.style.display='none'; statusEl.textContent='';
+    clearBtn.style.display='none'; statusEl.textContent=''; statusEl.className='status';
     document.getElementById('urlPreview').classList.remove('show');
-    document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.tag-chip[data-tag]').forEach(c=>c.classList.remove('selected'));
     document.querySelectorAll('.prio-pill').forEach(p=>p.classList.remove('sel'));
     document.querySelector('.prio-pill[data-p=""]').classList.add('sel');
-    activePrio = '';
-    applyChipColors(); if(tg)tg.MainButton.hide();
+    activePrio=''; applyChipColors(); if(tg) tg.MainButton.hide();
   }
 
   // ── Save gift ──
   function saveGift(){
-    const title=document.getElementById('g-title').value.trim(); if(!title)return;
+    const title=document.getElementById('g-title').value.trim(); if(!title) return;
     const list=loadGifts();
     list.unshift({
       id:Date.now(), title,
@@ -945,6 +1008,7 @@
       price:document.getElementById('g-price').value.trim(),
       url:document.getElementById('g-url').value.trim(),
       notes:document.getElementById('g-notes').value.trim(),
+      occasion:document.getElementById('g-occ').value,
       eventDate:document.getElementById('g-date').value,
       remindDays:document.getElementById('g-remind').value||'',
       date:today()
@@ -952,8 +1016,9 @@
     saveGifts(list); refresh();
     showToast('🎁 Подарок сохранён!');
     ['g-title','g-who','g-price','g-url','g-notes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('g-date').value=''; document.getElementById('g-remind').value='';
-    if(tg)tg.MainButton.hide();
+    document.getElementById('g-date').value=''; document.getElementById('g-remind').value=''; document.getElementById('g-occ').value='';
+    document.querySelectorAll('#occQuickTags .tag-chip').forEach(c=>c.classList.remove('selected'));
+    applyChipColors(); if(tg) tg.MainButton.hide();
   }
 
   if(tg) tg.MainButton.onClick(()=>{ if(currentTab==='home')saveWish(); if(currentTab==='gifts')saveGift(); });
