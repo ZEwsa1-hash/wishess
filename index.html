@@ -10,7 +10,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #151b22;
+      background: #0d1f17;
       color: #fff;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
@@ -18,83 +18,52 @@
     }
 
     /* ── Tabs ── */
-    .tab-content { display: none; padding: 20px 16px 100px; max-width: 480px; margin: 0 auto; }
+    .tab-content { display: none; padding: 20px 16px 110px; max-width: 480px; margin: 0 auto; }
     .tab-content.active { display: block; }
 
     /* ── Bottom nav ── */
     .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #1c2431;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #122418;
       border-top: 1px solid rgba(255,255,255,0.06);
       display: flex;
       padding-bottom: env(safe-area-inset-bottom, 0px);
       z-index: 100;
     }
     .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 4px 8px;
-      cursor: pointer;
-      gap: 4px;
-      transition: opacity 0.15s;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; padding: 10px 4px 8px;
+      cursor: pointer; gap: 3px;
+      user-select: none; -webkit-tap-highlight-color: transparent;
     }
     .nav-item:active { opacity: 0.6; }
     .nav-icon { font-size: 22px; line-height: 1; }
-    .nav-label {
-      font-size: 10px;
-      color: #4a5a6d;
-      font-weight: 500;
-      text-align: center;
-      line-height: 1.2;
-    }
+    .nav-label { font-size: 10px; color: #4a5a6d; font-weight: 500; text-align: center; }
     .nav-item.active .nav-label { color: #3ddc84; }
-    .nav-item.active .nav-icon  { filter: none; }
-    .nav-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: #3ddc84;
-      margin-top: 2px;
-      opacity: 0;
-    }
+    .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #3ddc84; margin-top: 2px; opacity: 0; }
     .nav-item.active .nav-dot { opacity: 1; }
 
     /* ── Common ── */
-    .page-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
+    .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
     .page-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
+      width: 44px; height: 44px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
+      font-size: 22px; flex-shrink: 0;
     }
     .page-icon.green  { background: #1e3a2f; }
     .page-icon.blue   { background: #1a2a3f; }
     .page-icon.purple { background: #2a1f3d; }
     .page-icon.gold   { background: #3a2f10; }
-    .page-icon.gray   { background: #232d3a; }
-
     .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
     .page-sub   { font-size: 13px; color: #6b7a8d; margin-top: 1px; }
 
     .section-label {
-      font-size: 12px; font-weight: 600;
-      color: #6b7a8d;
-      text-transform: uppercase;
-      letter-spacing: 0.7px;
+      font-size: 12px; font-weight: 600; color: #6b7a8d;
+      text-transform: uppercase; letter-spacing: 0.7px;
       margin: 20px 0 8px 4px;
     }
 
-    .card { background: #1c2431; border-radius: 16px; overflow: hidden; }
+    .card { background: #122418; border-radius: 16px; overflow: hidden; }
     .field { padding: 14px 16px; }
     .field + .field { border-top: 1px solid rgba(255,255,255,0.05); }
 
@@ -108,86 +77,112 @@
 
     .url-row { display: flex; align-items: center; gap: 8px; }
     .url-row input { flex: 1; min-width: 0; }
-
     .btn-clear {
-      flex-shrink: 0;
-      background: #2a3547; border: none; cursor: pointer;
-      color: #6b7a8d; font-size: 13px;
-      width: 24px; height: 24px; border-radius: 50%;
-      display: none; align-items: center; justify-content: center;
+      flex-shrink: 0; background: #2a3547; border: none; cursor: pointer;
+      color: #6b7a8d; font-size: 13px; width: 24px; height: 24px;
+      border-radius: 50%; display: none; align-items: center; justify-content: center;
     }
-    .btn-clear:active { background: #344057; }
 
     .status { font-size: 12px; margin-top: 6px; min-height: 16px; color: #6b7a8d; }
     .status.ok    { color: #3ddc84; }
     .status.error { color: #ff5f5f; }
     .hint { font-size: 12px; color: #3d4e63; margin-top: 5px; }
 
-    /* ── Quick tags ── */
+    /* Toggle switch */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+    }
+    .toggle-label { font-size: 15px; }
+    .toggle-sub   { font-size: 12px; color: #6b7a8d; margin-top: 2px; }
+    .switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0; background: #2a3547;
+      border-radius: 26px; cursor: pointer; transition: background 0.2s;
+    }
+    .slider::before {
+      content: ''; position: absolute;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; left: 3px; top: 3px; transition: transform 0.2s;
+    }
+    .switch input:checked + .slider { background: #3ddc84; }
+    .switch input:checked + .slider::before { transform: translateX(18px); }
+
+    /* Quick tags */
     .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .tag-chip {
       background: #1c2431; border: 1px solid #2a3547;
       border-radius: 20px; padding: 5px 12px;
-      font-size: 13px; color: #8b9bb4;
-      cursor: pointer; transition: all 0.15s; user-select: none;
+      font-size: 13px; color: #8b9bb4; cursor: pointer;
+      transition: all 0.15s; user-select: none;
     }
     .tag-chip.selected { background: #1e3a2f; border-color: #3ddc84; color: #3ddc84; }
 
-    /* ── Wish cards (списки) ── */
+    /* Wish list items */
     .wish-item {
-      background: #1c2431; border-radius: 16px;
+      background: #122418; border-radius: 16px;
       padding: 14px 16px; margin-bottom: 10px;
       display: flex; align-items: center; gap: 12px;
+      text-decoration: none; color: inherit;
     }
-    .wish-emoji { font-size: 28px; flex-shrink: 0; }
+    .wish-favicon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: #232d3a; display: flex; align-items: center;
+      justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
     .wish-info { flex: 1; min-width: 0; }
     .wish-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .wish-url  { font-size: 12px; color: #4a5a6d; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-domain { font-size: 12px; color: #4a5a6d; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
     .wish-badge {
-      flex-shrink: 0; font-size: 11px; font-weight: 600;
-      padding: 3px 8px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; padding: 3px 8px;
+      border-radius: 20px; white-space: nowrap;
     }
     .wish-badge.green  { background: #1e3a2f; color: #3ddc84; }
     .wish-badge.gold   { background: #3a2f10; color: #f0b429; }
-    .wish-badge.blue   { background: #1a2a3f; color: #5b9cf6; }
+    .wish-date { font-size: 11px; color: #4a5a6d; }
 
     /* Empty state */
-    .empty {
-      text-align: center; padding: 60px 20px;
-      color: #4a5a6d;
-    }
+    .empty { text-align: center; padding: 60px 20px; color: #4a5a6d; }
     .empty-icon { font-size: 48px; margin-bottom: 12px; }
     .empty-text { font-size: 15px; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #1e3a2f; color: #3ddc84; border: 1px solid #2a5040;
+      border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 600;
+      opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* Profile */
     .profile-avatar {
       width: 72px; height: 72px; border-radius: 50%;
-      background: #1e3a2f;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; margin: 0 auto 12px;
+      background: #1e3a2f; display: flex; align-items: center;
+      justify-content: center; font-size: 32px; margin: 0 auto 12px;
     }
     .profile-name { text-align: center; font-size: 18px; font-weight: 700; }
     .profile-sub  { text-align: center; font-size: 13px; color: #6b7a8d; margin-top: 4px; }
-    .stat-row {
-      display: flex; gap: 10px; margin-top: 20px;
-    }
-    .stat-box {
-      flex: 1; background: #1c2431; border-radius: 16px;
-      padding: 16px 12px; text-align: center;
-    }
+    .stat-row { display: flex; gap: 10px; margin-top: 20px; }
+    .stat-box { flex: 1; background: #1c2431; border-radius: 16px; padding: 16px 12px; text-align: center; }
     .stat-num { font-size: 24px; font-weight: 700; color: #3ddc84; }
     .stat-lbl { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
   </style>
 </head>
 <body>
 
-<!-- ══ TAB: Главная (добавить) ══ -->
+<!-- Toast -->
+<div class="toast" id="toast">✓ Сохранено!</div>
+
+<!-- ══ TAB: Главная ══ -->
 <div class="tab-content active" id="tab-home">
   <div class="page-header">
-    <div class="page-icon green">🔗</div>
+    <div class="page-icon green">✨</div>
     <div>
-      <div class="page-title">Добавить</div>
-      <div class="page-sub">Сохрани ссылку в список</div>
+      <div class="page-title">Добавить хотелку</div>
+      <div class="page-sub">Сохрани что хочешь</div>
     </div>
   </div>
 
@@ -205,30 +200,37 @@
   <div class="section-label">Название</div>
   <div class="card">
     <div class="field">
-      <input id="title" type="text" placeholder="Оставь пустым — получу автоматически" autocomplete="off" />
+      <input id="title" type="text" placeholder="Что это такое?" autocomplete="off" />
     </div>
   </div>
 
   <div class="section-label">Категория</div>
   <div class="card">
     <div class="field">
-      <input id="tags" type="text" placeholder="дизайн, frontend, ресурс" autocomplete="off" />
+      <input id="tags" type="text" placeholder="одежда, техника, книги..." autocomplete="off" />
       <div class="hint">Через запятую</div>
     </div>
   </div>
   <div class="quick-tags" id="quickTags">
+    <div class="tag-chip" data-tag="одежда">одежда</div>
+    <div class="tag-chip" data-tag="техника">техника</div>
+    <div class="tag-chip" data-tag="книги">книги</div>
     <div class="tag-chip" data-tag="дизайн">дизайн</div>
-    <div class="tag-chip" data-tag="frontend">frontend</div>
-    <div class="tag-chip" data-tag="ресурс">ресурс</div>
-    <div class="tag-chip" data-tag="статья">статья</div>
-    <div class="tag-chip" data-tag="инструмент">инструмент</div>
-    <div class="tag-chip" data-tag="вдохновение">вдохновение</div>
+    <div class="tag-chip" data-tag="путешествия">путешествия</div>
+    <div class="tag-chip" data-tag="хобби">хобби</div>
   </div>
 
-  <div class="section-label">Заметки</div>
+  <div class="section-label">Дополнительно</div>
   <div class="card">
-    <div class="field">
-      <textarea id="notes" placeholder="Зачем сохраняешь, что полезного..."></textarea>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">💎 Крупная хотелка</div>
+        <div class="toggle-sub">Дорогая или важная вещь</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="isBig" /><span class="slider"></span></label>
+    </div>
+    <div class="field" style="border-top: 1px solid rgba(255,255,255,0.05)">
+      <textarea id="notes" placeholder="Заметки, размер, цвет..."></textarea>
     </div>
   </div>
 </div>
@@ -239,30 +241,22 @@
     <div class="page-icon blue">⭐</div>
     <div>
       <div class="page-title">Все хотелки</div>
-      <div class="page-sub">Твой список желаний</div>
+      <div class="page-sub" id="sub-all">0 желаний</div>
     </div>
   </div>
-
-  <div class="empty">
-    <div class="empty-icon">✨</div>
-    <div class="empty-text">Пока пусто — добавь первую хотелку</div>
-  </div>
+  <div id="list-all"></div>
 </div>
 
-<!-- ══ TAB: Крупные хотелки ══ -->
+<!-- ══ TAB: Крупные ══ -->
 <div class="tab-content" id="tab-big">
   <div class="page-header">
     <div class="page-icon gold">💎</div>
     <div>
       <div class="page-title">Крупные хотелки</div>
-      <div class="page-sub">Дорогие и важные вещи</div>
+      <div class="page-sub" id="sub-big">0 желаний</div>
     </div>
   </div>
-
-  <div class="empty">
-    <div class="empty-icon">💎</div>
-    <div class="empty-text">Здесь будут крупные желания</div>
-  </div>
+  <div id="list-big"></div>
 </div>
 
 <!-- ══ TAB: Подарки ══ -->
@@ -271,13 +265,12 @@
     <div class="page-icon purple">🎁</div>
     <div>
       <div class="page-title">Подарки</div>
-      <div class="page-sub">Что подарить и кому</div>
+      <div class="page-sub">Идеи что подарить</div>
     </div>
   </div>
-
   <div class="empty">
     <div class="empty-icon">🎁</div>
-    <div class="empty-text">Здесь будут идеи для подарков</div>
+    <div class="empty-text">Скоро будет</div>
   </div>
 </div>
 
@@ -286,98 +279,117 @@
   <div class="profile-avatar">👤</div>
   <div class="profile-name" id="profileName">Профиль</div>
   <div class="profile-sub">Wishlist App</div>
-
   <div class="stat-row">
-    <div class="stat-box">
-      <div class="stat-num" id="statAll">0</div>
-      <div class="stat-lbl">Хотелок</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statBig">0</div>
-      <div class="stat-lbl">Крупных</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-num" id="statGifts">0</div>
-      <div class="stat-lbl">Подарков</div>
-    </div>
-  </div>
-
-  <div class="section-label" style="margin-top:28px">О приложении</div>
-  <div class="card">
-    <div class="field" style="color:#6b7a8d; font-size:14px; line-height:1.5">
-      Wishlist — твой личный список желаний в Telegram.<br>
-      Сохраняй ссылки, делись с друзьями.
-    </div>
+    <div class="stat-box"><div class="stat-num" id="statAll">0</div><div class="stat-lbl">Всего</div></div>
+    <div class="stat-box"><div class="stat-num" id="statBig">0</div><div class="stat-lbl">Крупных</div></div>
+    <div class="stat-box"><div class="stat-num" id="statDone">0</div><div class="stat-lbl">Куплено</div></div>
   </div>
 </div>
 
-<!-- ══ Bottom Navigation ══ -->
+<!-- ══ Bottom Nav ══ -->
 <nav class="bottom-nav">
-  <div class="nav-item active" data-tab="home">
-    <div class="nav-icon">🏠</div>
-    <div class="nav-label">Главная</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" data-tab="all">
-    <div class="nav-icon">⭐</div>
-    <div class="nav-label">Все хотелки</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" data-tab="big">
-    <div class="nav-icon">💎</div>
-    <div class="nav-label">Крупные</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" data-tab="gifts">
-    <div class="nav-icon">🎁</div>
-    <div class="nav-label">Подарки</div>
-    <div class="nav-dot"></div>
-  </div>
-  <div class="nav-item" data-tab="profile">
-    <div class="nav-icon">👤</div>
-    <div class="nav-label">Профиль</div>
-    <div class="nav-dot"></div>
-  </div>
+  <div class="nav-item active" data-tab="home"><div class="nav-icon">🏠</div><div class="nav-label">Главная</div><div class="nav-dot"></div></div>
+  <div class="nav-item" data-tab="all"><div class="nav-icon">⭐</div><div class="nav-label">Все хотелки</div><div class="nav-dot"></div></div>
+  <div class="nav-item" data-tab="big"><div class="nav-icon">💎</div><div class="nav-label">Крупные</div><div class="nav-dot"></div></div>
+  <div class="nav-item" data-tab="gifts"><div class="nav-icon">🎁</div><div class="nav-label">Подарки</div><div class="nav-dot"></div></div>
+  <div class="nav-item" data-tab="profile"><div class="nav-icon">👤</div><div class="nav-label">Профиль</div><div class="nav-dot"></div></div>
 </nav>
 
 <script>
   const tg = window.Telegram?.WebApp;
   if (tg) {
-    tg.ready();
-    tg.expand();
-    tg.MainButton.setText('Сохранить');
+    tg.ready(); tg.expand();
+    tg.MainButton.setText('Сохранить хотелку');
     tg.MainButton.hide();
     if (tg.initDataUnsafe?.user?.first_name) {
       document.getElementById('profileName').textContent =
-        tg.initDataUnsafe.user.first_name + (tg.initDataUnsafe.user.last_name ? ' ' + tg.initDataUnsafe.user.last_name : '');
+        [tg.initDataUnsafe.user.first_name, tg.initDataUnsafe.user.last_name].filter(Boolean).join(' ');
     }
   }
 
+  // ── Storage ──
+  function load() { try { return JSON.parse(localStorage.getItem('wishes') || '[]'); } catch { return []; } }
+  function save(list) { localStorage.setItem('wishes', JSON.stringify(list)); }
+
+  // ── Toast ──
+  function showToast(msg = '✓ Сохранено!') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ── Render lists ──
+  function getDomain(url) {
+    try { return new URL(url).hostname.replace('www.', ''); } catch { return url; }
+  }
+
+  function getEmoji(tags) {
+    const map = { одежда:'👕', техника:'💻', книги:'📚', дизайн:'🎨', путешествия:'✈️', хобби:'🎯', frontend:'💻', ресурс:'🔗' };
+    for (const t of tags) { if (map[t]) return map[t]; }
+    return '✨';
+  }
+
+  function renderList(containerId, wishes) {
+    const el = document.getElementById(containerId);
+    if (!wishes.length) {
+      el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">Пока пусто — добавь первую хотелку</div></div>';
+      return;
+    }
+    el.innerHTML = wishes.map(w => `
+      <a class="wish-item" href="${w.url || '#'}" target="_blank">
+        <div class="wish-favicon">${getEmoji(w.tags || [])}</div>
+        <div class="wish-info">
+          <div class="wish-name">${w.title || getDomain(w.url)}</div>
+          <div class="wish-domain">${getDomain(w.url)}</div>
+        </div>
+        <div class="wish-right">
+          ${w.big ? '<span class="wish-badge gold">💎 Крупная</span>' : '<span class="wish-badge green">⭐ Хотелка</span>'}
+          <span class="wish-date">${w.date || ''}</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  function refresh() {
+    const wishes = load();
+    const big = wishes.filter(w => w.big);
+
+    renderList('list-all', wishes);
+    renderList('list-big', big);
+
+    document.getElementById('sub-all').textContent = wishes.length + ' ' + plural(wishes.length, 'желание', 'желания', 'желаний');
+    document.getElementById('sub-big').textContent = big.length + ' ' + plural(big.length, 'желание', 'желания', 'желаний');
+    document.getElementById('statAll').textContent = wishes.length;
+    document.getElementById('statBig').textContent = big.length;
+  }
+
+  function plural(n, one, two, five) {
+    const m = n % 100;
+    if (m >= 11 && m <= 19) return five;
+    const m2 = n % 10;
+    if (m2 === 1) return one;
+    if (m2 >= 2 && m2 <= 4) return two;
+    return five;
+  }
+
   // ── Tab switching ──
-  const navItems = document.querySelectorAll('.nav-item');
-  navItems.forEach(item => {
+  document.querySelectorAll('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
-      const tab = item.dataset.tab;
-      navItems.forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       item.classList.add('active');
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.getElementById('tab-' + tab).classList.add('active');
-
-      // Show/hide main button depending on tab
-      if (!tg) return;
-      if (tab === 'home') {
-        isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
-      } else {
-        tg.MainButton.hide();
-      }
+      document.getElementById('tab-' + item.dataset.tab).classList.add('active');
+      if (tg) item.dataset.tab === 'home' ? syncBtn() : tg.MainButton.hide();
     });
   });
 
-  // ── Home tab logic ──
+  // ── Home form ──
   const urlEl    = document.getElementById('url');
   const titleEl  = document.getElementById('title');
   const tagsEl   = document.getElementById('tags');
   const notesEl  = document.getElementById('notes');
+  const isBigEl  = document.getElementById('isBig');
   const statusEl = document.getElementById('urlStatus');
   const clearBtn = document.getElementById('urlClear');
 
@@ -385,31 +397,21 @@
     try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; }
     catch { return false; }
   }
-
-  function setStatus(msg, type = '') {
-    statusEl.textContent = msg;
-    statusEl.className = 'status' + (type ? ' ' + type : '');
-  }
-
   function syncBtn() {
     if (!tg) return;
-    const activeTab = document.querySelector('.nav-item.active')?.dataset.tab;
-    if (activeTab !== 'home') return;
     isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
   }
 
   urlEl.addEventListener('input', () => {
     const v = urlEl.value.trim();
     clearBtn.style.display = v ? 'flex' : 'none';
-    if (!v) setStatus('');
+    if (!v) statusEl.textContent = '';
     syncBtn();
   });
 
   clearBtn.addEventListener('click', () => {
-    urlEl.value = '';
-    clearBtn.style.display = 'none';
-    setStatus('');
-    if (tg) tg.MainButton.hide();
+    urlEl.value = ''; clearBtn.style.display = 'none';
+    statusEl.textContent = ''; if (tg) tg.MainButton.hide();
     urlEl.focus();
   });
 
@@ -418,44 +420,59 @@
     if (!chip) return;
     chip.classList.toggle('selected');
     const tag = chip.dataset.tag;
-    const current = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
-    const idx = current.indexOf(tag);
-    if (idx === -1) current.push(tag); else current.splice(idx, 1);
-    tagsEl.value = current.join(', ');
+    const cur = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
+    const idx = cur.indexOf(tag);
+    if (idx === -1) cur.push(tag); else cur.splice(idx, 1);
+    tagsEl.value = cur.join(', ');
   });
 
-  tagsEl.addEventListener('input', () => {
-    const current = tagsEl.value.split(',').map(t => t.trim());
-    document.querySelectorAll('.tag-chip').forEach(chip => {
-      chip.classList.toggle('selected', current.includes(chip.dataset.tag));
-    });
-  });
-
+  // Clipboard auto-fill
   if (navigator.clipboard?.readText) {
     navigator.clipboard.readText().then(text => {
       const t = text?.trim();
       if (t && isUrl(t) && !urlEl.value) {
-        urlEl.value = t;
-        clearBtn.style.display = 'flex';
-        setStatus('📋 Вставлено из буфера', 'ok');
+        urlEl.value = t; clearBtn.style.display = 'flex';
+        statusEl.className = 'status ok'; statusEl.textContent = '📋 Вставлено из буфера';
         syncBtn();
       }
     }).catch(() => {});
   }
 
-  if (tg) {
-    tg.MainButton.onClick(() => {
-      const url = urlEl.value.trim();
-      if (!isUrl(url)) return;
-      tg.MainButton.showProgress(false);
-      tg.sendData(JSON.stringify({
-        url:   url,
-        title: titleEl.value.trim(),
-        tags:  tagsEl.value.trim(),
-        notes: notesEl.value.trim(),
-      }));
-    });
+  // ── Save wish ──
+  function saveWish() {
+    const url = urlEl.value.trim();
+    if (!url) return;
+
+    const tags = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
+    const wish = {
+      id: Date.now(),
+      url,
+      title: titleEl.value.trim() || getDomain(url),
+      tags,
+      notes: notesEl.value.trim(),
+      big: isBigEl.checked,
+      date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }),
+    };
+
+    const list = load();
+    list.unshift(wish);
+    save(list);
+    refresh();
+    showToast(wish.big ? '💎 Крупная хотелка сохранена!' : '✨ Хотелка сохранена!');
+
+    // Сброс формы
+    urlEl.value = ''; titleEl.value = ''; tagsEl.value = ''; notesEl.value = '';
+    isBigEl.checked = false;
+    clearBtn.style.display = 'none';
+    statusEl.textContent = '';
+    document.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('selected'));
+    if (tg) tg.MainButton.hide();
   }
+
+  if (tg) tg.MainButton.onClick(saveWish);
+
+  // Init
+  refresh();
 </script>
 </body>
 </html>
