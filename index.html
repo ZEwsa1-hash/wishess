@@ -105,6 +105,7 @@
     .cur-btn { display: inline-flex; align-items: center; gap: 3px; background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px; padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa; cursor: pointer; user-select: none; white-space: nowrap; position: relative; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
     .cur-drop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 500; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.7); min-width: 110px; display: none; }
     .cur-drop.open { display: block; }
+    .cur-btn.up .cur-drop { top: auto; bottom: calc(100% + 8px); }
     .cur-opt { padding: 11px 16px; font-size: 14px; cursor: pointer; color: #c4b5fd; display: flex; align-items: center; gap: 8px; }
     .cur-opt:active { background: #2a1f3d; }
     .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.08); }
@@ -253,7 +254,7 @@
       <div class="card"><div class="field">
         <div style="display:flex;align-items:center;gap:8px">
           <input id="price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
-          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+          <div class="cur-btn up" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
             <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
             <div class="cur-drop">
               <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
@@ -371,7 +372,7 @@
       <div class="card"><div class="field">
         <div style="display:flex;align-items:center;gap:8px">
           <input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
-          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+          <div class="cur-btn up" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
             <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
             <div class="cur-drop">
               <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
