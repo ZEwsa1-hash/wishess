@@ -61,6 +61,9 @@
     input, textarea { width: 100%; }
     input::placeholder, textarea::placeholder { color: #3d3054; }
     input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.5); }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
     textarea { resize: none; height: 70px; }
 
     .row2 { display: flex; gap: 10px; }
@@ -107,11 +110,52 @@
       border: 1px solid transparent;
     }
 
+    /* ── Priority pills ── */
+    .priority-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .prio-pill {
+      padding: 5px 14px; border-radius: 20px; font-size: 13px;
+      cursor: pointer; border: 1.5px solid transparent;
+      transition: all .2s; user-select: none; opacity: .4;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .prio-pill.sel { opacity: 1; }
+    .prio-pill[data-p="urgent"]         { background: #3a1f1f; color: #f87171; }
+    .prio-pill[data-p="urgent"].sel     { border-color: #f87171; }
+    .prio-pill[data-p="important"]      { background: #3a3010; color: #fbbf24; }
+    .prio-pill[data-p="important"].sel  { border-color: #fbbf24; }
+    .prio-pill[data-p="later"]          { background: #1f2a3a; color: #60a5fa; }
+    .prio-pill[data-p="later"].sel      { border-color: #60a5fa; }
+
+    /* ── Currency picker ── */
+    .cur-btn {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px;
+      padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa;
+      cursor: pointer; user-select: none; white-space: nowrap;
+      position: relative; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cur-drop {
+      position: absolute; top: calc(100% + 8px); right: 0; z-index: 500;
+      background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px;
+      overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.7);
+      min-width: 110px; display: none;
+    }
+    .cur-drop.open { display: block; }
+    .cur-opt {
+      padding: 11px 16px; font-size: 14px; cursor: pointer; color: #c4b5fd;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .cur-opt:active { background: #2a1f3d; }
+    .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.08); }
+    .cur-check { font-size: 12px; margin-left: auto; opacity: 0; }
+    .cur-opt.sel .cur-check { opacity: 1; }
+
     /* Search & Sort */
-    .list-controls { display: flex; gap: 8px; margin-bottom: 14px; }
+    .list-controls { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; }
     .search-input {
       flex: 1; background: #17132a; border-radius: 12px; padding: 10px 14px;
-      font-size: 14px; color: #fff; border: none; outline: none;
+      font-size: 14px; color: #fff; border: none; outline: none; min-width: 0;
     }
     .search-input::placeholder { color: #3d3054; }
     .sort-select {
@@ -141,7 +185,6 @@
     }
     .wish-item.bought .wish-check { background: #2a1f3d; border-color: #a78bfa; }
 
-    /* Favicon in card */
     .wish-favicon {
       width: 38px; height: 38px; border-radius: 10px; background: #1f1835;
       display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
@@ -161,7 +204,10 @@
     .badge-gold   { background: #3a2f10; color: #f0b429; }
     .badge-pink   { background: #3a1f2f; color: #f472b6; }
     .badge-green  { background: #1a3a2a; color: #4ade80; }
-    .wish-price { font-size: 13px; font-weight: 700; color: #a78bfa; }
+    .badge-red    { background: #3a1f1f; color: #f87171; }
+    .badge-yellow { background: #3a3010; color: #fbbf24; }
+    .badge-blue   { background: #1f2a3a; color: #60a5fa; }
+    .wish-price { font-size: 13px; font-weight: 700; color: #a78bfa; cursor: pointer; }
     .wish-date  { font-size: 11px; color: #4a3a6d; }
 
     /* Gift date badge */
@@ -184,7 +230,7 @@
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* Profile */
+    /* ── Profile ── */
     .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #2a1f3d; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; }
     .profile-name { text-align: center; font-size: 18px; font-weight: 700; }
     .profile-sub  { text-align: center; font-size: 13px; color: #6b5a8d; margin-top: 4px; }
@@ -192,6 +238,37 @@
     .stat-box { flex: 1; background: #17132a; border-radius: 16px; padding: 16px 12px; text-align: center; }
     .stat-num { font-size: 24px; font-weight: 700; color: #a78bfa; }
     .stat-lbl { font-size: 12px; color: #6b5a8d; margin-top: 4px; }
+
+    .stat-sum-card { background: #17132a; border-radius: 16px; padding: 16px 18px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .stat-sum-label { font-size: 13px; color: #6b5a8d; }
+    .stat-sum-value { font-size: 22px; font-weight: 700; color: #a78bfa; }
+
+    .stat-progress { margin-top: 10px; background: #17132a; border-radius: 16px; padding: 14px 18px; }
+    .prog-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+    .prog-lbl { color: #6b5a8d; }
+    .prog-val { color: #a78bfa; font-weight: 600; }
+    .prog-bar { height: 6px; background: #2a1f3d; border-radius: 3px; overflow: hidden; }
+    .prog-fill { height: 100%; background: linear-gradient(90deg,#7c3aed,#a78bfa); border-radius: 3px; transition: width .5s; }
+
+    .top-cats-card { background: #17132a; border-radius: 16px; overflow: hidden; margin-top: 10px; }
+    .top-cat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; }
+    .top-cat-row + .top-cat-row { border-top: 1px solid rgba(255,255,255,.05); }
+    .top-cat-name { font-size: 14px; }
+    .top-cat-count { font-size: 13px; color: #6b5a8d; }
+    .top-cat-bar { height: 4px; background: #2a1f3d; border-radius: 2px; margin-top: 4px; overflow: hidden; flex: 1; margin: 0 12px; }
+    .top-cat-fill { height: 100%; border-radius: 2px; }
+
+    /* ── Sync buttons ── */
+    .sync-btn {
+      width: 100%; padding: 15px; border-radius: 16px; font-size: 15px;
+      font-weight: 600; cursor: pointer; border: none; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .sync-export { background: #2a1f3d; color: #a78bfa; }
+    .sync-import { background: #1f2a3a; color: #60a5fa; }
+    .sync-export:active { opacity: .8; }
+    .sync-import:active { opacity: .8; }
   </style>
 </head>
 <body>
@@ -225,8 +302,8 @@
 
   <div class="row2">
     <div>
-      <div class="section-label">Цена</div>
-      <div class="card"><div class="field"><input id="price" type="text" placeholder="1500 руб" autocomplete="off" /></div></div>
+      <div class="section-label">Цена (BYN)</div>
+      <div class="card"><div class="field"><input id="price" type="number" placeholder="0" min="0" autocomplete="off" /></div></div>
     </div>
     <div>
       <div class="section-label">Категория</div>
@@ -240,6 +317,14 @@
     <div class="tag-chip" data-tag="дизайн">дизайн</div>
     <div class="tag-chip" data-tag="путешествия">путешествия</div>
     <div class="tag-chip" data-tag="хобби">хобби</div>
+  </div>
+
+  <div class="section-label">Приоритет</div>
+  <div class="priority-pills" id="prioPills">
+    <div class="prio-pill sel" data-p="">Без приоритета</div>
+    <div class="prio-pill" data-p="urgent">🔴 Срочно</div>
+    <div class="prio-pill" data-p="important">🟡 Важно</div>
+    <div class="prio-pill" data-p="later">🔵 Позже</div>
   </div>
 
   <div class="section-label">Дополнительно</div>
@@ -264,9 +349,18 @@
     <input class="search-input" id="search-all" placeholder="🔍 Поиск..." />
     <select class="sort-select" id="sort-all">
       <option value="date">Новые</option>
+      <option value="prio">Приоритет</option>
       <option value="price-asc">Дешевле</option>
       <option value="price-desc">Дороже</option>
     </select>
+    <div class="cur-btn" id="curBtn" onclick="toggleCurDrop(event)">
+      <span id="curLabel">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+      <div class="cur-drop" id="curDrop">
+        <div class="cur-opt sel" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+        <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
+        <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+      </div>
+    </div>
   </div>
   <div id="list-all"></div>
 </div>
@@ -281,6 +375,7 @@
     <input class="search-input" id="search-big" placeholder="🔍 Поиск..." />
     <select class="sort-select" id="sort-big">
       <option value="date">Новые</option>
+      <option value="prio">Приоритет</option>
       <option value="price-asc">Дешевле</option>
       <option value="price-desc">Дороже</option>
     </select>
@@ -304,8 +399,8 @@
       <div class="card"><div class="field"><input id="g-who" type="text" placeholder="Маме, другу..." autocomplete="off" /></div></div>
     </div>
     <div>
-      <div class="section-label">Цена</div>
-      <div class="card"><div class="field"><input id="g-price" type="text" placeholder="~3000 руб" autocomplete="off" /></div></div>
+      <div class="section-label">Цена (BYN)</div>
+      <div class="card"><div class="field"><input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" /></div></div>
     </div>
   </div>
 
@@ -321,8 +416,8 @@
       <div class="section-label">🔔 Напомнить за</div>
       <div class="card"><div class="field">
         <div style="display:flex;align-items:center;gap:6px">
-          <input id="g-remind" type="number" placeholder="7" min="1" max="90" style="width:50px" />
-          <span style="color:#6b5a8d;font-size:14px">дней</span>
+          <input id="g-remind" type="number" placeholder="7" min="1" max="90" style="flex:1" />
+          <span style="color:#6b5a8d;font-size:14px;flex-shrink:0">дней</span>
         </div>
       </div></div>
     </div>
@@ -339,15 +434,41 @@
   <div class="profile-avatar">👤</div>
   <div class="profile-name" id="profileName">Профиль</div>
   <div class="profile-sub">Wishlist App</div>
+
   <div class="stat-row">
     <div class="stat-box"><div class="stat-num" id="statAll">0</div><div class="stat-lbl">Всего</div></div>
     <div class="stat-box"><div class="stat-num" id="statBig">0</div><div class="stat-lbl">Крупных</div></div>
     <div class="stat-box"><div class="stat-num" id="statBought">0</div><div class="stat-lbl">Куплено</div></div>
   </div>
-  <div class="section-label" style="margin-top:28px">О приложении</div>
+
+  <div class="stat-sum-card">
+    <div>
+      <div class="stat-sum-label">Сумма хотелок</div>
+      <div class="stat-sum-value" id="statSum">0 Br</div>
+    </div>
+    <div class="cur-btn" id="curBtnProfile" onclick="toggleCurDrop(event)">
+      <span id="curLabelProfile">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+    </div>
+  </div>
+
+  <div class="stat-progress">
+    <div class="prog-row"><span class="prog-lbl">Прогресс покупок</span><span class="prog-val" id="progText">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="section-label">Топ категории</div>
+  <div class="top-cats-card" id="topCats"></div>
+
+  <div class="section-label">Синхронизация</div>
+  <button class="sync-btn sync-export" onclick="exportData()">📤 Экспорт JSON</button>
+  <button class="sync-btn sync-import" onclick="document.getElementById('importFile').click()">📥 Импорт JSON</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)" />
+
+  <div class="section-label" style="margin-top:20px">О приложении</div>
   <div class="card"><div class="field" style="color:#6b5a8d;font-size:14px;line-height:1.6">
-    Данные хранятся в памяти Telegram на этом устройстве.<br>
-    Напоминания о подарках регистрируются в боте и работают независимо.
+    Данные хранятся локально на этом устройстве.<br>
+    Используй экспорт/импорт для переноса на другое устройство.<br>
+    Напоминания о подарках работают через бот.
   </div></div>
 </div>
 
@@ -367,6 +488,51 @@
     const u = tg.initDataUnsafe?.user;
     if (u) document.getElementById('profileName').textContent = [u.first_name, u.last_name].filter(Boolean).join(' ');
   }
+
+  // ── Currency ──
+  const RATES   = { BYN: 1, RUB: 31, USD: 0.29 };
+  const CUR_SYM = { BYN: 'Br', RUB: '₽', USD: '$' };
+  let activeCur = localStorage.getItem('currency') || 'BYN';
+
+  function formatPrice(raw) {
+    if (!raw && raw !== 0) return '';
+    const n = parseFloat(String(raw).replace(/[^\d.]/g, ''));
+    if (isNaN(n) || n === 0) return '';
+    const converted = n * RATES[activeCur];
+    const sym = CUR_SYM[activeCur];
+    const rounded = activeCur === 'USD' ? converted.toFixed(2) : Math.round(converted);
+    return activeCur === 'USD' ? `${sym}${rounded}` : `${rounded} ${sym}`;
+  }
+
+  function updateCurUI() {
+    document.querySelectorAll('.cur-label, #curLabelProfile').forEach(el => el.textContent = activeCur);
+    document.querySelectorAll('.cur-opt').forEach(el => {
+      el.classList.toggle('sel', el.dataset.cur === activeCur);
+    });
+    localStorage.setItem('currency', activeCur);
+  }
+
+  function toggleCurDrop(e) {
+    e.stopPropagation();
+    // Close any open drop first
+    document.querySelectorAll('.cur-drop.open').forEach(d => {
+      if (!e.currentTarget.contains(d)) d.classList.remove('open');
+    });
+    const drop = e.currentTarget.querySelector('.cur-drop');
+    if (drop) drop.classList.toggle('open');
+  }
+
+  function setCur(cur, e) {
+    e.stopPropagation();
+    activeCur = cur;
+    updateCurUI();
+    document.querySelectorAll('.cur-drop').forEach(d => d.classList.remove('open'));
+    refresh();
+  }
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.cur-drop.open').forEach(d => d.classList.remove('open'));
+  });
 
   // ── Tag colors ──
   const TAG_COLORS = {
@@ -393,6 +559,22 @@
     });
   }
 
+  // ── Priority ──
+  const PRIO_BADGE = {
+    urgent:    '<span class="wish-badge badge-red">🔴 Срочно</span>',
+    important: '<span class="wish-badge badge-yellow">🟡 Важно</span>',
+    later:     '<span class="wish-badge badge-blue">🔵 Позже</span>',
+  };
+  const PRIO_ORDER = { urgent: 0, important: 1, later: 2, '': 3 };
+  let activePrio = '';
+
+  document.getElementById('prioPills').addEventListener('click', e => {
+    const pill = e.target.closest('.prio-pill'); if (!pill) return;
+    document.querySelectorAll('.prio-pill').forEach(p => p.classList.remove('sel'));
+    pill.classList.add('sel');
+    activePrio = pill.dataset.p;
+  });
+
   // ── Storage ──
   const load      = () => { try{return JSON.parse(localStorage.getItem('wishes')||'[]');}catch{return[];} };
   const loadGifts = () => { try{return JSON.parse(localStorage.getItem('gifts') ||'[]');}catch{return[];} };
@@ -406,14 +588,10 @@
     setTimeout(() => t.classList.remove('show'), 2200);
   };
   const getDomain  = url => { try{return new URL(url).hostname.replace('www.','');}catch{return '';} };
-  const parsePrice = s => { if(!s)return Infinity; const n=parseFloat(s.replace(/[^\d.]/g,'')); return isNaN(n)?Infinity:n; };
+  const parsePrice = s => { if(!s && s!==0)return Infinity; const n=parseFloat(String(s).replace(/[^\d.]/g,'')); return isNaN(n)?Infinity:n; };
   const plural     = (n,a,b,c) => { const m=n%100; if(m>=11&&m<=19)return c; const m2=n%10; if(m2===1)return a; if(m2>=2&&m2<=4)return b; return c; };
   const today      = () => new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-
-  function faviconUrl(url) {
-    const d = getDomain(url);
-    return d ? `https://www.google.com/s2/favicons?domain=${d}&sz=64` : '';
-  }
+  const faviconUrl = url => { const d=getDomain(url); return d?`https://www.google.com/s2/favicons?domain=${d}&sz=64`:''; };
 
   function tagBadges(tags) {
     return (tags||[]).map(t => {
@@ -424,10 +602,8 @@
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
-    try {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
-    } catch { return dateStr; }
+    try { return new Date(dateStr).toLocaleDateString('ru-RU',{day:'numeric',month:'long'}); }
+    catch { return dateStr; }
   }
 
   // ── Filter & Sort ──
@@ -439,32 +615,45 @@
     }
     if (sortVal==='price-asc')  res=[...res].sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
     if (sortVal==='price-desc') res=[...res].sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
+    if (sortVal==='prio')       res=[...res].sort((a,b)=>(PRIO_ORDER[a.priority||'']??3)-(PRIO_ORDER[b.priority||'']??3));
     return res;
   }
 
   // ── Render ──
+  const getEmoji = tags => {
+    const m={одежда:'👕',техника:'💻',книги:'📚',дизайн:'🎨',путешествия:'✈️',хобби:'🎯',frontend:'💻'};
+    for(const t of(tags||[]))if(m[t])return m[t]; return '✨';
+  };
+  const openUrl = url => window.open(url,'_blank');
+
   function wishHTML(w) {
     const bought = w.bought ? 'bought' : '';
     const check  = w.bought ? '✓' : '';
-    const boughtBadge = w.bought
-      ? '<span class="wish-badge badge-green">✅ Куплено</span>'
-      : (w.big ? '<span class="wish-badge badge-gold">💎</span>' : '<span class="wish-badge badge-purple">⭐</span>');
-    const favicon = w.url ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />` : (w.tags&&w.tags[0] ? '' : '✨');
-    const faviconEmoji = (!w.url && w.tags && w.tags.length) ? getEmoji(w.tags) : '';
+    let topBadge;
+    if (w.bought) topBadge = '<span class="wish-badge badge-green">✅ Куплено</span>';
+    else if (w.priority && PRIO_BADGE[w.priority]) topBadge = PRIO_BADGE[w.priority];
+    else if (w.big) topBadge = '<span class="wish-badge badge-gold">💎</span>';
+    else topBadge = '<span class="wish-badge badge-purple">⭐</span>';
+
+    const priceStr = formatPrice(w.price);
+    const faviconInner = w.url
+      ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />`
+      : (w.tags&&w.tags.length ? getEmoji(w.tags) : '✨');
+
     return `
       <div class="swipe-wrap" data-id="${w.id}">
         <div class="delete-bg" onclick="deleteItem('${w.id}','wish')">🗑</div>
         <div class="wish-item ${bought}" data-id="${w.id}" data-type="wish">
           <div class="wish-check" onclick="toggleBought(event,'${w.id}')">${check}</div>
-          <div class="wish-favicon">${w.url ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />` : faviconEmoji || '✨'}</div>
+          <div class="wish-favicon">${faviconInner}</div>
           <div class="wish-info" onclick="${w.url?`openUrl('${w.url}')`:``}">
             <div class="wish-name">${w.title}</div>
             <div class="wish-domain">${w.url ? getDomain(w.url) : ''}</div>
             ${(w.tags&&w.tags.length) ? `<div class="wish-tags">${tagBadges(w.tags)}</div>` : ''}
           </div>
           <div class="wish-right">
-            ${boughtBadge}
-            ${w.price ? `<span class="wish-price">${w.price}</span>` : ''}
+            ${topBadge}
+            ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             <span class="wish-date">${w.date||''}</span>
           </div>
         </div>
@@ -472,8 +661,9 @@
   }
 
   function giftHTML(g) {
-    const dateStr = g.eventDate ? formatDate(g.eventDate) : '';
+    const dateStr  = g.eventDate ? formatDate(g.eventDate) : '';
     const remindStr = g.remindDays && g.eventDate ? `🔔 за ${g.remindDays} дн.` : '';
+    const priceStr  = formatPrice(g.price);
     return `
       <div class="swipe-wrap" data-id="${g.id}">
         <div class="delete-bg" onclick="deleteItem('${g.id}','gift')">🗑</div>
@@ -486,18 +676,12 @@
           </div>
           <div class="wish-right">
             <span class="wish-badge badge-pink">🎁</span>
-            ${g.price ? `<span class="wish-price">${g.price}</span>` : ''}
+            ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             ${remindStr ? `<div class="remind-btn" onclick="registerReminder(event,'${g.id}')">${remindStr}</div>` : ''}
           </div>
         </div>
       </div>`;
   }
-
-  const getEmoji = tags => {
-    const m={одежда:'👕',техника:'💻',книги:'📚',дизайн:'🎨',путешествия:'✈️',хобби:'🎯',frontend:'💻'};
-    for(const t of(tags||[]))if(m[t])return m[t]; return '✨';
-  };
-  const openUrl = url => window.open(url,'_blank');
 
   function renderList(id, list, empty) {
     const el = document.getElementById(id);
@@ -506,8 +690,47 @@
       : `<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">${empty}</div></div>`;
   }
 
+  function renderStats(wishes) {
+    const bought = wishes.filter(w => w.bought);
+    const big    = wishes.filter(w => w.big);
+
+    // Sum (in BYN)
+    const sumBYN = wishes.reduce((acc, w) => {
+      const n = parsePrice(w.price); return acc + (n === Infinity ? 0 : n);
+    }, 0);
+    document.getElementById('statAll').textContent   = wishes.length;
+    document.getElementById('statBig').textContent   = big.length;
+    document.getElementById('statBought').textContent= bought.length;
+    document.getElementById('statSum').textContent   = formatPrice(sumBYN) || `0 ${CUR_SYM[activeCur]}`;
+
+    // Progress
+    const pct = wishes.length ? Math.round(bought.length / wishes.length * 100) : 0;
+    document.getElementById('progText').textContent = pct + '%';
+    document.getElementById('progFill').style.width = pct + '%';
+
+    // Top categories
+    const catMap = {};
+    wishes.forEach(w => (w.tags||[]).forEach(t => { catMap[t] = (catMap[t]||0)+1; }));
+    const sorted = Object.entries(catMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxCount = sorted[0]?.[1] || 1;
+    const topEl = document.getElementById('topCats');
+    if (!sorted.length) {
+      topEl.innerHTML = '<div class="top-cat-row" style="color:#4a3a6d;font-size:14px">Нет категорий</div>';
+    } else {
+      topEl.innerHTML = sorted.map(([name, cnt]) => {
+        const tc = tagColor(name);
+        const barPct = Math.round(cnt / maxCount * 100);
+        return `<div class="top-cat-row">
+          <span style="font-size:14px;color:${tc.color}">${name}</span>
+          <div class="top-cat-bar"><div class="top-cat-fill" style="width:${barPct}%;background:${tc.color}"></div></div>
+          <span class="top-cat-count">${cnt}</span>
+        </div>`;
+      }).join('');
+    }
+  }
+
   function refresh() {
-    const wishes = load(), big = wishes.filter(w=>w.big), bought=wishes.filter(w=>w.bought), gifts=loadGifts();
+    const wishes = load(), big = wishes.filter(w=>w.big), gifts=loadGifts();
     const qA=document.getElementById('search-all')?.value||'', qB=document.getElementById('search-big')?.value||'';
     const sA=document.getElementById('sort-all')?.value||'date', sB=document.getElementById('sort-big')?.value||'date';
     renderList('list-all', applyFilter(wishes,qA,sA), 'Пока пусто — добавь первую хотелку');
@@ -516,10 +739,9 @@
     document.getElementById('sub-all').textContent   = wishes.length+' '+plural(wishes.length,'желание','желания','желаний');
     document.getElementById('sub-big').textContent   = big.length+' '+plural(big.length,'желание','желания','желаний');
     document.getElementById('sub-gifts').textContent = gifts.length+' '+plural(gifts.length,'идея','идеи','идей');
-    document.getElementById('statAll').textContent   = wishes.length;
-    document.getElementById('statBig').textContent   = big.length;
-    document.getElementById('statBought').textContent= bought.length;
+    renderStats(wishes);
     applyChipColors();
+    updateCurUI();
     initSwipe();
   }
 
@@ -547,6 +769,39 @@
       `Зарегистрировать напоминание?\n\n🎁 ${gift.title}\n📅 ${dateFormatted}\n🔔 За ${gift.remindDays} дней\n\n(Приложение закроется)`,
       ok => { if(ok) tg.sendData(JSON.stringify({ type:'reminder', id:gift.id, title:gift.title, who:gift.who||'', eventDate:gift.eventDate, remindDays:gift.remindDays })); }
     );
+  }
+
+  // ── Export / Import ──
+  function exportData() {
+    const data = { version: 1, wishes: load(), gifts: loadGifts(), exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = `wishlist-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+    showToast('📤 Экспорт готов!');
+  }
+
+  function importData(input) {
+    const file = input.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const wishes = data.wishes || data; // support both {wishes:[]} and plain []
+        const gifts  = data.gifts  || [];
+        if (!Array.isArray(wishes)) throw new Error('invalid');
+        const merge = confirm
+          ? confirm(`Импортировать ${wishes.length} хотелок и ${gifts.length} подарков?\n\nСуществующие данные будут заменены.`)
+          : true;
+        if (!merge) return;
+        save(wishes); saveGifts(gifts); refresh();
+        showToast(`✅ Импортировано: ${wishes.length} хотелок`);
+      } catch { showToast('❌ Ошибка формата файла'); }
+    };
+    reader.readAsText(file);
+    input.value = '';
   }
 
   // ── Swipe ──
@@ -614,10 +869,8 @@
     previewTimer=setTimeout(()=>{
       if(isUrl(v)){
         const domain=getDomain(v);
-        const fav=document.getElementById('previewFavicon');
-        const tit=document.getElementById('previewTitle');
-        fav.src=`https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-        tit.textContent=domain;
+        document.getElementById('previewFavicon').src=`https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        document.getElementById('previewTitle').textContent=domain;
         document.getElementById('urlPreview').classList.add('show');
       }
     },400);
@@ -660,13 +913,25 @@
     const title=titleEl.value.trim(); if(!title)return;
     const tags=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
     const list=load();
-    list.unshift({id:Date.now(),title,url:urlEl.value.trim(),price:priceEl.value.trim(),tags,notes:notesEl.value.trim(),big:isBigEl.checked,bought:false,date:today()});
+    list.unshift({
+      id:Date.now(), title,
+      url:urlEl.value.trim(),
+      price:priceEl.value.trim(),
+      tags, notes:notesEl.value.trim(),
+      big:isBigEl.checked, bought:false,
+      priority:activePrio,
+      date:today()
+    });
     save(list); refresh();
-    showToast(isBigEl.checked?'💎 Крупная хотелка сохранена!':'✨ Хотелка сохранена!');
+    const emoji = activePrio==='urgent'?'🔴':activePrio==='important'?'🟡':isBigEl.checked?'💎':'✨';
+    showToast(`${emoji} Хотелка сохранена!`);
     titleEl.value=''; urlEl.value=''; priceEl.value=''; tagsEl.value=''; notesEl.value=''; isBigEl.checked=false;
     clearBtn.style.display='none'; statusEl.textContent='';
     document.getElementById('urlPreview').classList.remove('show');
     document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.prio-pill').forEach(p=>p.classList.remove('sel'));
+    document.querySelector('.prio-pill[data-p=""]').classList.add('sel');
+    activePrio = '';
     applyChipColors(); if(tg)tg.MainButton.hide();
   }
 
@@ -693,7 +958,7 @@
 
   if(tg) tg.MainButton.onClick(()=>{ if(currentTab==='home')saveWish(); if(currentTab==='gifts')saveGift(); });
 
-  applyChipColors(); refresh();
+  updateCurUI(); applyChipColors(); refresh();
 </script>
 </body>
 </html>
