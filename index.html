@@ -248,7 +248,7 @@
     .sparkline-wrap { margin-top: 2px; line-height: 0; }
 
     /* FAB — горизонтальная кнопка снизу */
-    #fabAdd { position:fixed;bottom:calc(72px + env(safe-area-inset-bottom,0px));left:16px;right:16px;width:auto;height:50px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);z-index:90;-webkit-tap-highlight-color:transparent; }
+    #fabAdd { position:fixed;bottom:calc(122px + env(safe-area-inset-bottom,0px));left:16px;right:16px;width:auto;height:50px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);z-index:90;-webkit-tap-highlight-color:transparent; }
     #fabAdd.show { display:flex; }
 
     /* ── Multi-select ── */
@@ -501,16 +501,16 @@
       <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
     </div>
   </div>
-  <div id="list-all"></div>
-
   <!-- Archive section -->
-  <div id="archiveSection" style="display:none">
+  <div id="archiveSection" style="display:none;margin-bottom:10px">
     <div class="archive-header" onclick="toggleArchive()">
       <span class="archive-title">🗄 Архив (<span id="archiveCount">0</span>)</span>
       <span class="archive-arrow" id="archiveArrow">▼</span>
     </div>
     <div class="archive-body" id="archiveBody"></div>
   </div>
+
+  <div id="list-all"></div>
 </div>
 
 <!-- ══ Крупные ══ -->
@@ -532,16 +532,16 @@
       <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
     </div>
   </div>
-  <div id="list-big"></div>
-
   <!-- Archive section for big -->
-  <div id="archiveSectionBig" style="display:none">
+  <div id="archiveSectionBig" style="display:none;margin-bottom:10px">
     <div class="archive-header" onclick="toggleArchiveBig()">
       <span class="archive-title">🗄 Архив (<span id="archiveCountBig">0</span>)</span>
       <span class="archive-arrow" id="archiveArrowBig">▼</span>
     </div>
     <div class="archive-body" id="archiveBodyBig"></div>
   </div>
+
+  <div id="list-big"></div>
 </div>
 
 <!-- ══ Подарки ══ -->
@@ -613,10 +613,6 @@
     <div class="section-label">Заметки</div>
     <div class="card">
       <div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div>
-      <div class="toggle-row" style="border-top:1px solid rgba(255,255,255,.05)">
-        <div><div class="toggle-label">💎 Крупная хотелка</div></div>
-        <label class="switch"><input type="checkbox" id="g-big" /><span class="slider"></span></label>
-      </div>
     </div>
     <div style="height:14px"></div>
   </div>
@@ -1186,9 +1182,11 @@
     document.getElementById('archiveBodyBig').innerHTML = boughtBig.map(w => wishHTML(w, true, true)).join('');
 
     // Gifts
-    const filteredGifts = activeOccasion
+    let filteredGifts = activeOccasion
       ? gifts.filter(g => g.occasion === activeOccasion)
       : gifts;
+    // Pinned gifts always on top
+    filteredGifts = [...filteredGifts.filter(g => g.pinned), ...filteredGifts.filter(g => !g.pinned)];
     const giftsEl = document.getElementById('list-gifts');
     if (!filteredGifts.length) {
       giftsEl.innerHTML = `<div class="empty"><div class="empty-icon">🎁</div><div class="empty-text">Нет подарков</div></div>`;
@@ -1374,7 +1372,7 @@
       if (kbHeight > 80) {
         fab.style.bottom = (kbHeight + 12) + 'px';
       } else {
-        fab.style.bottom = 'calc(72px + env(safe-area-inset-bottom,0px))';
+        fab.style.bottom = 'calc(122px + env(safe-area-inset-bottom,0px))';
       }
     });
   }
@@ -1535,14 +1533,13 @@
       occasion:document.getElementById('g-occ').value,
       eventDate:document.getElementById('g-date').value,
       remindDays:document.getElementById('g-remind').value||'',
-      big:document.getElementById('g-big').checked||false,
+      big: false,
       date:today()
     });
     saveGifts(list); refresh();
     showToast('🎁 Подарок сохранён!');
     ['g-title','g-who','g-price','g-url','g-notes'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('g-date').value=''; document.getElementById('g-remind').value=''; document.getElementById('g-occ').value='';
-    document.getElementById('g-big').checked=false;
     document.querySelectorAll('#occQuickTags .tag-chip').forEach(c=>c.classList.remove('selected'));
     applyChipColors(); if(tg) tg.MainButton.hide();
   }
