@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Link Saver</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       var(--tg-theme-bg-color, #1c1c1e);
+      --bg2:      var(--tg-theme-secondary-bg-color, #2c2c2e);
+      --text:     var(--tg-theme-text-color, #ffffff);
+      --hint:     var(--tg-theme-hint-color, #8e8e93);
+      --accent:   var(--tg-theme-button-color, #3478f6);
+      --radius:   14px;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 32px;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .header-icon { font-size: 30px; line-height: 1; }
+    .header h1  { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+
+    /* Card */
+    .card {
+      background: var(--bg2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .field {
+      padding: 12px 14px;
+      position: relative;
+    }
+    .field + .field { border-top: 1px solid rgba(255,255,255,0.06); }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--hint);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+    }
+    input::placeholder, textarea::placeholder { color: var(--hint); }
+
+    textarea {
+      resize: none;
+      height: 72px;
+      line-height: 1.4;
+    }
+
+    /* URL row */
+    .url-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .url-row input { flex: 1; min-width: 0; }
+
+    .btn-clear {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--hint);
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px;
+      display: none;
+      transition: opacity 0.15s;
+    }
+    .btn-clear:active { opacity: 0.5; }
+
+    /* Status badge */
+    .status {
+      font-size: 13px;
+      margin-top: 7px;
+      min-height: 17px;
+      color: var(--hint);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .status.ok    { color: #30d158; }
+    .status.error { color: #ff453a; }
+    .status.load  { color: var(--accent); }
+
+    /* Tags hint */
+    .hint {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 6px;
+    }
+
+    /* Bottom padding for Telegram main button */
+    .bottom-space { height: 80px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <span class="header-icon">🔗</span>
+    <h1>Link Saver</h1>
+  </div>
+
+  <!-- URL -->
+  <div class="card">
+    <div class="field">
+      <label>Ссылка *</label>
+      <div class="url-row">
+        <input id="url" type="url" placeholder="https://..." autocomplete="off" autocorrect="off" spellcheck="false" />
+        <button class="btn-clear" id="urlClear" type="button">✕</button>
+      </div>
+      <div class="status" id="urlStatus"></div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="card">
+    <div class="field">
+      <label>Заголовок</label>
+      <input id="title" type="text" placeholder="Оставь пустым — получу автоматически" autocomplete="off" />
+    </div>
+  </div>
+
+  <!-- Tags + Notes -->
+  <div class="card">
+    <div class="field">
+      <label>Теги</label>
+      <input id="tags" type="text" placeholder="дизайн, frontend, ресурс" autocomplete="off" />
+      <div class="hint">Через запятую</div>
+    </div>
+    <div class="field">
+      <label>Заметки</label>
+      <textarea id="notes" placeholder="Зачем сохраняешь, что полезного..."></textarea>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    tg.MainButton.setText('Сохранить');
+    tg.MainButton.hide();
+  }
+
+  const urlEl     = document.getElementById('url');
+  const titleEl   = document.getElementById('title');
+  const tagsEl    = document.getElementById('tags');
+  const notesEl   = document.getElementById('notes');
+  const statusEl  = document.getElementById('urlStatus');
+  const clearBtn  = document.getElementById('urlClear');
+
+  function isUrl(s) {
+    try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; }
+    catch { return false; }
+  }
+
+  function setStatus(msg, type = '') {
+    statusEl.textContent = msg;
+    statusEl.className = 'status' + (type ? ' ' + type : '');
+  }
+
+  function syncMainButton() {
+    if (!tg) return;
+    isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
+  }
+
+  urlEl.addEventListener('input', () => {
+    const val = urlEl.value.trim();
+    clearBtn.style.display = val ? 'block' : 'none';
+    syncMainButton();
+    if (!val) setStatus('');
+  });
+
+  clearBtn.addEventListener('click', () => {
+    urlEl.value = '';
+    clearBtn.style.display = 'none';
+    setStatus('');
+    if (tg) tg.MainButton.hide();
+    urlEl.focus();
+  });
+
+  // Auto-fill from clipboard
+  if (navigator.clipboard?.readText) {
+    navigator.clipboard.readText().then(text => {
+      const trimmed = text?.trim();
+      if (trimmed && isUrl(trimmed) && !urlEl.value) {
+        urlEl.value = trimmed;
+        clearBtn.style.display = 'block';
+        setStatus('📋 Вставлено из буфера', 'ok');
+        syncMainButton();
+      }
+    }).catch(() => {});
+  }
+
+  // Send data when main button pressed
+  if (tg) {
+    tg.MainButton.onClick(() => {
+      const url = urlEl.value.trim();
+      if (!isUrl(url)) return;
+
+      tg.MainButton.showProgress(false);
+      tg.sendData(JSON.stringify({
+        url:   url,
+        title: titleEl.value.trim(),
+        tags:  tagsEl.value.trim(),
+        notes: notesEl.value.trim(),
+      }));
+    });
+  }
+</script>
+</body>
+</html>
