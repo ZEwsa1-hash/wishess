@@ -7,208 +7,230 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f0d17;
-      color: #fff;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      background: #0f0d17; color: #fff;
+      min-height: 100vh; -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
-
-    /* ── Tabs ── */
     .tab-content { display: none; padding: 20px 16px 110px; max-width: 480px; margin: 0 auto; }
     .tab-content.active { display: block; }
 
-    /* ── Bottom nav ── */
+    /* ── Nav ── */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: #17132a;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      z-index: 100;
+      background: #17132a; border-top: 1px solid rgba(255,255,255,.06);
+      display: flex; padding-bottom: env(safe-area-inset-bottom,0); z-index: 100;
     }
     .nav-item {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; padding: 10px 4px 8px;
-      cursor: pointer; gap: 3px;
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      padding: 10px 4px 8px; cursor: pointer; gap: 3px;
       user-select: none; -webkit-tap-highlight-color: transparent;
     }
-    .nav-item:active { opacity: 0.6; }
-    .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-item:active { opacity: .6; }
+    .nav-icon  { font-size: 22px; line-height: 1; }
     .nav-label { font-size: 10px; color: #4a5a6d; font-weight: 500; text-align: center; }
-    .nav-item.active .nav-label { color: #3ddc84; }
-    .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #3ddc84; margin-top: 2px; opacity: 0; }
+    .nav-item.active .nav-label { color: #a78bfa; }
+    .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: #a78bfa; margin-top: 2px; opacity: 0; }
     .nav-item.active .nav-dot { opacity: 1; }
 
     /* ── Common ── */
-    .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
     .page-icon {
       width: 44px; height: 44px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
     }
-    .page-icon.green  { background: #1e3a2f; }
-    .page-icon.blue   { background: #1a2a3f; }
     .page-icon.purple { background: #2a1f3d; }
+    .page-icon.blue   { background: #1a2a3f; }
     .page-icon.gold   { background: #3a2f10; }
-    .page-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .page-icon.pink   { background: #3a1f2f; }
+    .page-title { font-size: 20px; font-weight: 700; letter-spacing: -.3px; }
     .page-sub   { font-size: 13px; color: #6b7a8d; margin-top: 1px; }
 
     .section-label {
       font-size: 12px; font-weight: 600; color: #6b7a8d;
-      text-transform: uppercase; letter-spacing: 0.7px;
-      margin: 20px 0 8px 4px;
+      text-transform: uppercase; letter-spacing: .7px; margin: 20px 0 8px 4px;
     }
-
     .card { background: #17132a; border-radius: 16px; overflow: hidden; }
     .field { padding: 14px 16px; }
-    .field + .field { border-top: 1px solid rgba(255,255,255,0.05); }
+    .field + .field { border-top: 1px solid rgba(255,255,255,.05); }
 
-    input, textarea {
-      width: 100%; background: transparent; border: none;
-      font-size: 15px; color: #fff; outline: none;
-      font-family: inherit; line-height: 1.4;
+    input, textarea, select {
+      background: transparent; border: none; font-size: 15px; color: #fff;
+      outline: none; font-family: inherit; line-height: 1.4;
     }
-    input::placeholder, textarea::placeholder { color: #3d4e63; }
+    input, textarea { width: 100%; }
+    input::placeholder, textarea::placeholder { color: #3d3054; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.5); }
     textarea { resize: none; height: 70px; }
+
+    .row2 { display: flex; gap: 10px; }
+    .row2 .card { flex: 1; }
 
     .url-row { display: flex; align-items: center; gap: 8px; }
     .url-row input { flex: 1; min-width: 0; }
     .btn-clear {
-      flex-shrink: 0; background: #2a3547; border: none; cursor: pointer;
-      color: #6b7a8d; font-size: 13px; width: 24px; height: 24px;
+      flex-shrink: 0; background: #2a2040; border: none; cursor: pointer;
+      color: #6b5a8d; font-size: 13px; width: 24px; height: 24px;
       border-radius: 50%; display: none; align-items: center; justify-content: center;
     }
 
-    .status { font-size: 12px; margin-top: 6px; min-height: 16px; color: #6b7a8d; }
-    .status.ok    { color: #3ddc84; }
-    .status.error { color: #ff5f5f; }
-    .hint { font-size: 12px; color: #3d4e63; margin-top: 5px; }
-
-    /* Toggle switch */
-    .toggle-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px;
+    /* URL preview */
+    .url-preview {
+      display: none; align-items: center; gap: 10px;
+      margin-top: 10px; padding: 10px 12px;
+      background: #1f1835; border-radius: 12px;
     }
+    .url-preview.show { display: flex; }
+    .preview-favicon { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #2a2040; }
+    .preview-title { font-size: 13px; color: #c4b5fd; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .status { font-size: 12px; margin-top: 6px; min-height: 16px; color: #6b5a8d; }
+    .status.ok { color: #a78bfa; }
+    .hint { font-size: 12px; color: #3d3054; margin-top: 5px; }
+
+    /* Toggle */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
     .toggle-label { font-size: 15px; }
-    .toggle-sub   { font-size: 12px; color: #6b7a8d; margin-top: 2px; }
+    .toggle-sub   { font-size: 12px; color: #6b5a8d; margin-top: 2px; }
     .switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; inset: 0; background: #2a3547;
-      border-radius: 26px; cursor: pointer; transition: background 0.2s;
-    }
-    .slider::before {
-      content: ''; position: absolute;
-      width: 20px; height: 20px; border-radius: 50%;
-      background: #fff; left: 3px; top: 3px; transition: transform 0.2s;
-    }
-    .switch input:checked + .slider { background: #3ddc84; }
+    .slider { position: absolute; inset: 0; background: #2a2040; border-radius: 26px; cursor: pointer; transition: background .2s; }
+    .slider::before { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background: #fff; left: 3px; top: 3px; transition: transform .2s; }
+    .switch input:checked + .slider { background: #7c3aed; }
     .switch input:checked + .slider::before { transform: translateX(18px); }
 
-    /* Quick tags */
+    /* Colored tags */
     .quick-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
     .tag-chip {
-      background: #1c2431; border: 1px solid #2a3547;
-      border-radius: 20px; padding: 5px 12px;
-      font-size: 13px; color: #8b9bb4; cursor: pointer;
-      transition: all 0.15s; user-select: none;
+      border-radius: 20px; padding: 5px 12px; font-size: 13px;
+      cursor: pointer; transition: all .15s; user-select: none;
+      border: 1px solid transparent;
     }
-    .tag-chip.selected { background: #1e3a2f; border-color: #3ddc84; color: #3ddc84; }
 
-    /* Wish list items */
+    /* Search & Sort */
+    .list-controls { display: flex; gap: 8px; margin-bottom: 14px; }
+    .search-input {
+      flex: 1; background: #17132a; border-radius: 12px; padding: 10px 14px;
+      font-size: 14px; color: #fff; border: none; outline: none;
+    }
+    .search-input::placeholder { color: #3d3054; }
+    .sort-select {
+      background: #17132a; border-radius: 12px; padding: 10px 12px;
+      font-size: 13px; color: #a78bfa; cursor: pointer; flex-shrink: 0;
+      appearance: none; -webkit-appearance: none;
+    }
+
+    /* Swipe */
+    .swipe-wrap { position: relative; margin-bottom: 10px; border-radius: 16px; overflow: hidden; }
+    .delete-bg {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 80px;
+      background: #5f1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
     .wish-item {
-      background: #17132a; border-radius: 16px;
-      padding: 14px 16px; margin-bottom: 10px;
-      display: flex; align-items: center; gap: 12px;
-      text-decoration: none; color: inherit;
+      background: #17132a; border-radius: 16px; padding: 12px 14px;
+      display: flex; align-items: center; gap: 10px;
+      position: relative; transition: transform .25s; will-change: transform;
     }
-    .wish-favicon {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: #232d3a; display: flex; align-items: center;
-      justify-content: center; font-size: 20px; flex-shrink: 0;
-    }
-    .wish-info { flex: 1; min-width: 0; }
-    .wish-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .wish-domain { font-size: 12px; color: #4a5a6d; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .wish-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-    .wish-badge {
-      font-size: 11px; font-weight: 600; padding: 3px 8px;
-      border-radius: 20px; white-space: nowrap;
-    }
-    .wish-badge.green  { background: #1e3a2f; color: #3ddc84; }
-    .wish-badge.gold   { background: #3a2f10; color: #f0b429; }
-    .wish-date { font-size: 11px; color: #4a5a6d; }
+    .wish-item.bought { opacity: .55; }
+    .wish-item.bought .wish-name { text-decoration: line-through; }
 
-    /* Empty state */
-    .empty { text-align: center; padding: 60px 20px; color: #4a5a6d; }
-    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .wish-check {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      border: 2px solid #3d2f5a; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; transition: all .2s; cursor: pointer;
+    }
+    .wish-item.bought .wish-check { background: #2a1f3d; border-color: #a78bfa; }
+
+    /* Favicon in card */
+    .wish-favicon {
+      width: 38px; height: 38px; border-radius: 10px; background: #1f1835;
+      display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+      overflow: hidden;
+    }
+    .wish-favicon img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+
+    .wish-info { flex: 1; min-width: 0; }
+    .wish-name   { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-domain { font-size: 12px; color: #4a3a6d; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wish-tags   { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; }
+    .wish-tag    { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; }
+
+    .wish-right  { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .wish-badge  { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+    .badge-purple { background: #2a1f3d; color: #a78bfa; }
+    .badge-gold   { background: #3a2f10; color: #f0b429; }
+    .badge-pink   { background: #3a1f2f; color: #f472b6; }
+    .badge-green  { background: #1a3a2a; color: #4ade80; }
+    .wish-price { font-size: 13px; font-weight: 700; color: #a78bfa; }
+    .wish-date  { font-size: 11px; color: #4a3a6d; }
+
+    /* Gift date badge */
+    .date-badge { font-size: 11px; background: #1a2a3f; color: #60a5fa; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+    .remind-btn {
+      font-size: 11px; background: #2a1f3d; color: #c084fc; padding: 4px 10px;
+      border-radius: 20px; cursor: pointer; border: 1px solid #3d2f5a;
+      white-space: nowrap; margin-top: 4px;
+    }
+
+    .empty { text-align: center; padding: 50px 20px; color: #4a3a6d; }
+    .empty-icon { font-size: 44px; margin-bottom: 10px; }
     .empty-text { font-size: 15px; }
 
-    /* Toast */
     .toast {
       position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: #1e3a2f; color: #3ddc84; border: 1px solid #2a5040;
+      background: #2a1f3d; color: #a78bfa; border: 1px solid #3d2f5a;
       border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 600;
-      opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200;
+      opacity: 0; transition: all .3s; pointer-events: none; white-space: nowrap; z-index: 200;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* Profile */
-    .profile-avatar {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: #1e3a2f; display: flex; align-items: center;
-      justify-content: center; font-size: 32px; margin: 0 auto 12px;
-    }
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #2a1f3d; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; }
     .profile-name { text-align: center; font-size: 18px; font-weight: 700; }
-    .profile-sub  { text-align: center; font-size: 13px; color: #6b7a8d; margin-top: 4px; }
+    .profile-sub  { text-align: center; font-size: 13px; color: #6b5a8d; margin-top: 4px; }
     .stat-row { display: flex; gap: 10px; margin-top: 20px; }
-    .stat-box { flex: 1; background: #1c2431; border-radius: 16px; padding: 16px 12px; text-align: center; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #3ddc84; }
-    .stat-lbl { font-size: 12px; color: #6b7a8d; margin-top: 4px; }
+    .stat-box { flex: 1; background: #17132a; border-radius: 16px; padding: 16px 12px; text-align: center; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #a78bfa; }
+    .stat-lbl { font-size: 12px; color: #6b5a8d; margin-top: 4px; }
   </style>
 </head>
 <body>
 
-<!-- Toast -->
-<div class="toast" id="toast">✓ Сохранено!</div>
+<div class="toast" id="toast"></div>
 
-<!-- ══ TAB: Главная ══ -->
+<!-- ══ Главная ══ -->
 <div class="tab-content active" id="tab-home">
   <div class="page-header">
-    <div class="page-icon green">✨</div>
+    <div class="page-icon purple">✨</div>
+    <div><div class="page-title">Добавить хотелку</div><div class="page-sub">Сохрани что хочешь</div></div>
+  </div>
+
+  <div class="section-label">Название *</div>
+  <div class="card"><div class="field">
+    <input id="title" type="text" placeholder="Что хочешь?" autocomplete="off" />
+  </div></div>
+
+  <div class="section-label">Ссылка (необязательно)</div>
+  <div class="card"><div class="field">
+    <div class="url-row">
+      <input id="url" type="url" placeholder="https://..." autocomplete="off" autocorrect="off" spellcheck="false" />
+      <button class="btn-clear" id="urlClear" type="button">✕</button>
+    </div>
+    <div class="url-preview" id="urlPreview">
+      <img class="preview-favicon" id="previewFavicon" src="" alt="" />
+      <span class="preview-title" id="previewTitle"></span>
+    </div>
+    <div class="status" id="urlStatus"></div>
+  </div></div>
+
+  <div class="row2">
     <div>
-      <div class="page-title">Добавить хотелку</div>
-      <div class="page-sub">Сохрани что хочешь</div>
+      <div class="section-label">Цена</div>
+      <div class="card"><div class="field"><input id="price" type="text" placeholder="1500 руб" autocomplete="off" /></div></div>
     </div>
-  </div>
-
-  <div class="section-label">Ссылка</div>
-  <div class="card">
-    <div class="field">
-      <div class="url-row">
-        <input id="url" type="url" placeholder="https://..." autocomplete="off" autocorrect="off" spellcheck="false" />
-        <button class="btn-clear" id="urlClear" type="button">✕</button>
-      </div>
-      <div class="status" id="urlStatus"></div>
-    </div>
-  </div>
-
-  <div class="section-label">Название</div>
-  <div class="card">
-    <div class="field">
-      <input id="title" type="text" placeholder="Что это такое?" autocomplete="off" />
-    </div>
-  </div>
-
-  <div class="section-label">Категория</div>
-  <div class="card">
-    <div class="field">
-      <input id="tags" type="text" placeholder="одежда, техника, книги..." autocomplete="off" />
-      <div class="hint">Через запятую</div>
+    <div>
+      <div class="section-label">Категория</div>
+      <div class="card"><div class="field"><input id="tags" type="text" placeholder="одежда..." autocomplete="off" /></div></div>
     </div>
   </div>
   <div class="quick-tags" id="quickTags">
@@ -223,58 +245,96 @@
   <div class="section-label">Дополнительно</div>
   <div class="card">
     <div class="toggle-row">
-      <div>
-        <div class="toggle-label">💎 Крупная хотелка</div>
-        <div class="toggle-sub">Дорогая или важная вещь</div>
-      </div>
+      <div><div class="toggle-label">💎 Крупная хотелка</div><div class="toggle-sub">Дорогая или важная вещь</div></div>
       <label class="switch"><input type="checkbox" id="isBig" /><span class="slider"></span></label>
     </div>
-    <div class="field" style="border-top: 1px solid rgba(255,255,255,0.05)">
+    <div class="field" style="border-top:1px solid rgba(255,255,255,.05)">
       <textarea id="notes" placeholder="Заметки, размер, цвет..."></textarea>
     </div>
   </div>
 </div>
 
-<!-- ══ TAB: Все хотелки ══ -->
+<!-- ══ Все хотелки ══ -->
 <div class="tab-content" id="tab-all">
   <div class="page-header">
     <div class="page-icon blue">⭐</div>
-    <div>
-      <div class="page-title">Все хотелки</div>
-      <div class="page-sub" id="sub-all">0 желаний</div>
-    </div>
+    <div><div class="page-title">Все хотелки</div><div class="page-sub" id="sub-all">0 желаний</div></div>
+  </div>
+  <div class="list-controls">
+    <input class="search-input" id="search-all" placeholder="🔍 Поиск..." />
+    <select class="sort-select" id="sort-all">
+      <option value="date">Новые</option>
+      <option value="price-asc">Дешевле</option>
+      <option value="price-desc">Дороже</option>
+    </select>
   </div>
   <div id="list-all"></div>
 </div>
 
-<!-- ══ TAB: Крупные ══ -->
+<!-- ══ Крупные ══ -->
 <div class="tab-content" id="tab-big">
   <div class="page-header">
     <div class="page-icon gold">💎</div>
-    <div>
-      <div class="page-title">Крупные хотелки</div>
-      <div class="page-sub" id="sub-big">0 желаний</div>
-    </div>
+    <div><div class="page-title">Крупные хотелки</div><div class="page-sub" id="sub-big">0 желаний</div></div>
+  </div>
+  <div class="list-controls">
+    <input class="search-input" id="search-big" placeholder="🔍 Поиск..." />
+    <select class="sort-select" id="sort-big">
+      <option value="date">Новые</option>
+      <option value="price-asc">Дешевле</option>
+      <option value="price-desc">Дороже</option>
+    </select>
   </div>
   <div id="list-big"></div>
 </div>
 
-<!-- ══ TAB: Подарки ══ -->
+<!-- ══ Подарки ══ -->
 <div class="tab-content" id="tab-gifts">
   <div class="page-header">
-    <div class="page-icon purple">🎁</div>
+    <div class="page-icon pink">🎁</div>
+    <div><div class="page-title">Подарки</div><div class="page-sub" id="sub-gifts">0 идей</div></div>
+  </div>
+
+  <div class="section-label">Название *</div>
+  <div class="card"><div class="field"><input id="g-title" type="text" placeholder="Что подарить?" autocomplete="off" /></div></div>
+
+  <div class="row2">
     <div>
-      <div class="page-title">Подарки</div>
-      <div class="page-sub">Идеи что подарить</div>
+      <div class="section-label">Кому</div>
+      <div class="card"><div class="field"><input id="g-who" type="text" placeholder="Маме, другу..." autocomplete="off" /></div></div>
+    </div>
+    <div>
+      <div class="section-label">Цена</div>
+      <div class="card"><div class="field"><input id="g-price" type="text" placeholder="~3000 руб" autocomplete="off" /></div></div>
     </div>
   </div>
-  <div class="empty">
-    <div class="empty-icon">🎁</div>
-    <div class="empty-text">Скоро будет</div>
+
+  <div class="section-label">Ссылка</div>
+  <div class="card"><div class="field"><input id="g-url" type="url" placeholder="https://..." autocomplete="off" spellcheck="false" /></div></div>
+
+  <div class="row2">
+    <div>
+      <div class="section-label">📅 Дата события</div>
+      <div class="card"><div class="field"><input id="g-date" type="date" /></div></div>
+    </div>
+    <div>
+      <div class="section-label">🔔 Напомнить за</div>
+      <div class="card"><div class="field">
+        <div style="display:flex;align-items:center;gap:6px">
+          <input id="g-remind" type="number" placeholder="7" min="1" max="90" style="width:50px" />
+          <span style="color:#6b5a8d;font-size:14px">дней</span>
+        </div>
+      </div></div>
+    </div>
   </div>
+
+  <div class="section-label">Заметки</div>
+  <div class="card"><div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div></div>
+  <div style="height:14px"></div>
+  <div id="list-gifts"></div>
 </div>
 
-<!-- ══ TAB: Профиль ══ -->
+<!-- ══ Профиль ══ -->
 <div class="tab-content" id="tab-profile">
   <div class="profile-avatar">👤</div>
   <div class="profile-name" id="profileName">Профиль</div>
@@ -282,11 +342,15 @@
   <div class="stat-row">
     <div class="stat-box"><div class="stat-num" id="statAll">0</div><div class="stat-lbl">Всего</div></div>
     <div class="stat-box"><div class="stat-num" id="statBig">0</div><div class="stat-lbl">Крупных</div></div>
-    <div class="stat-box"><div class="stat-num" id="statDone">0</div><div class="stat-lbl">Куплено</div></div>
+    <div class="stat-box"><div class="stat-num" id="statBought">0</div><div class="stat-lbl">Куплено</div></div>
   </div>
+  <div class="section-label" style="margin-top:28px">О приложении</div>
+  <div class="card"><div class="field" style="color:#6b5a8d;font-size:14px;line-height:1.6">
+    Данные хранятся в памяти Telegram на этом устройстве.<br>
+    Напоминания о подарках регистрируются в боте и работают независимо.
+  </div></div>
 </div>
 
-<!-- ══ Bottom Nav ══ -->
 <nav class="bottom-nav">
   <div class="nav-item active" data-tab="home"><div class="nav-icon">🏠</div><div class="nav-label">Главная</div><div class="nav-dot"></div></div>
   <div class="nav-item" data-tab="all"><div class="nav-icon">⭐</div><div class="nav-label">Все хотелки</div><div class="nav-dot"></div></div>
@@ -299,180 +363,337 @@
   const tg = window.Telegram?.WebApp;
   if (tg) {
     tg.ready(); tg.expand();
-    tg.MainButton.setText('Сохранить хотелку');
-    tg.MainButton.hide();
-    if (tg.initDataUnsafe?.user?.first_name) {
-      document.getElementById('profileName').textContent =
-        [tg.initDataUnsafe.user.first_name, tg.initDataUnsafe.user.last_name].filter(Boolean).join(' ');
-    }
+    tg.MainButton.setText('Сохранить'); tg.MainButton.hide();
+    const u = tg.initDataUnsafe?.user;
+    if (u) document.getElementById('profileName').textContent = [u.first_name, u.last_name].filter(Boolean).join(' ');
+  }
+
+  // ── Tag colors ──
+  const TAG_COLORS = {
+    'одежда':      { bg:'#3a1f1f', color:'#f87171', border:'#5a2f2f' },
+    'техника':     { bg:'#1f2a3a', color:'#60a5fa', border:'#2f3f5a' },
+    'книги':       { bg:'#1f3a25', color:'#4ade80', border:'#2f5a35' },
+    'дизайн':      { bg:'#2a1f3a', color:'#c084fc', border:'#3f2f5a' },
+    'путешествия': { bg:'#1f3a3a', color:'#22d3ee', border:'#2f5a5a' },
+    'хобби':       { bg:'#3a2a1f', color:'#fb923c', border:'#5a3f2f' },
+    'frontend':    { bg:'#1f2a3a', color:'#60a5fa', border:'#2f3f5a' },
+  };
+  function tagColor(tag) {
+    if (TAG_COLORS[tag]) return TAG_COLORS[tag];
+    let h = 0; for (let c of tag) h = c.charCodeAt(0) + ((h<<5)-h);
+    const hue = Math.abs(h) % 360;
+    return { bg:`hsl(${hue},35%,14%)`, color:`hsl(${hue},65%,65%)`, border:`hsl(${hue},35%,22%)` };
+  }
+  function applyChipColors() {
+    document.querySelectorAll('.tag-chip').forEach(chip => {
+      const tc = tagColor(chip.dataset.tag);
+      chip.style.background = chip.classList.contains('selected') ? tc.bg : '#17132a';
+      chip.style.color       = chip.classList.contains('selected') ? tc.color : '#7a6a9d';
+      chip.style.borderColor = chip.classList.contains('selected') ? tc.border : '#2a2040';
+    });
   }
 
   // ── Storage ──
-  function load() { try { return JSON.parse(localStorage.getItem('wishes') || '[]'); } catch { return []; } }
-  function save(list) { localStorage.setItem('wishes', JSON.stringify(list)); }
+  const load      = () => { try{return JSON.parse(localStorage.getItem('wishes')||'[]');}catch{return[];} };
+  const loadGifts = () => { try{return JSON.parse(localStorage.getItem('gifts') ||'[]');}catch{return[];} };
+  const save      = l => localStorage.setItem('wishes', JSON.stringify(l));
+  const saveGifts = l => localStorage.setItem('gifts',  JSON.stringify(l));
 
-  // ── Toast ──
-  function showToast(msg = '✓ Сохранено!') {
+  // ── Helpers ──
+  const showToast = msg => {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2000);
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  };
+  const getDomain  = url => { try{return new URL(url).hostname.replace('www.','');}catch{return '';} };
+  const parsePrice = s => { if(!s)return Infinity; const n=parseFloat(s.replace(/[^\d.]/g,'')); return isNaN(n)?Infinity:n; };
+  const plural     = (n,a,b,c) => { const m=n%100; if(m>=11&&m<=19)return c; const m2=n%10; if(m2===1)return a; if(m2>=2&&m2<=4)return b; return c; };
+  const today      = () => new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+
+  function faviconUrl(url) {
+    const d = getDomain(url);
+    return d ? `https://www.google.com/s2/favicons?domain=${d}&sz=64` : '';
   }
 
-  // ── Render lists ──
-  function getDomain(url) {
-    try { return new URL(url).hostname.replace('www.', ''); } catch { return url; }
+  function tagBadges(tags) {
+    return (tags||[]).map(t => {
+      const tc = tagColor(t);
+      return `<span class="wish-tag" style="background:${tc.bg};color:${tc.color}">${t}</span>`;
+    }).join('');
   }
 
-  function getEmoji(tags) {
-    const map = { одежда:'👕', техника:'💻', книги:'📚', дизайн:'🎨', путешествия:'✈️', хобби:'🎯', frontend:'💻', ресурс:'🔗' };
-    for (const t of tags) { if (map[t]) return map[t]; }
-    return '✨';
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+    } catch { return dateStr; }
   }
 
-  function renderList(containerId, wishes) {
-    const el = document.getElementById(containerId);
-    if (!wishes.length) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">Пока пусто — добавь первую хотелку</div></div>';
-      return;
+  // ── Filter & Sort ──
+  function applyFilter(list, query, sortVal) {
+    let res = list;
+    if (query) {
+      const q = query.toLowerCase();
+      res = res.filter(w => w.title.toLowerCase().includes(q) || (w.tags||[]).some(t=>t.toLowerCase().includes(q)));
     }
-    el.innerHTML = wishes.map(w => `
-      <a class="wish-item" href="${w.url || '#'}" target="_blank">
-        <div class="wish-favicon">${getEmoji(w.tags || [])}</div>
-        <div class="wish-info">
-          <div class="wish-name">${w.title || getDomain(w.url)}</div>
-          <div class="wish-domain">${getDomain(w.url)}</div>
+    if (sortVal==='price-asc')  res=[...res].sort((a,b)=>parsePrice(a.price)-parsePrice(b.price));
+    if (sortVal==='price-desc') res=[...res].sort((a,b)=>parsePrice(b.price)-parsePrice(a.price));
+    return res;
+  }
+
+  // ── Render ──
+  function wishHTML(w) {
+    const bought = w.bought ? 'bought' : '';
+    const check  = w.bought ? '✓' : '';
+    const boughtBadge = w.bought
+      ? '<span class="wish-badge badge-green">✅ Куплено</span>'
+      : (w.big ? '<span class="wish-badge badge-gold">💎</span>' : '<span class="wish-badge badge-purple">⭐</span>');
+    const favicon = w.url ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />` : (w.tags&&w.tags[0] ? '' : '✨');
+    const faviconEmoji = (!w.url && w.tags && w.tags.length) ? getEmoji(w.tags) : '';
+    return `
+      <div class="swipe-wrap" data-id="${w.id}">
+        <div class="delete-bg" onclick="deleteItem('${w.id}','wish')">🗑</div>
+        <div class="wish-item ${bought}" data-id="${w.id}" data-type="wish">
+          <div class="wish-check" onclick="toggleBought(event,'${w.id}')">${check}</div>
+          <div class="wish-favicon">${w.url ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />` : faviconEmoji || '✨'}</div>
+          <div class="wish-info" onclick="${w.url?`openUrl('${w.url}')`:``}">
+            <div class="wish-name">${w.title}</div>
+            <div class="wish-domain">${w.url ? getDomain(w.url) : ''}</div>
+            ${(w.tags&&w.tags.length) ? `<div class="wish-tags">${tagBadges(w.tags)}</div>` : ''}
+          </div>
+          <div class="wish-right">
+            ${boughtBadge}
+            ${w.price ? `<span class="wish-price">${w.price}</span>` : ''}
+            <span class="wish-date">${w.date||''}</span>
+          </div>
         </div>
-        <div class="wish-right">
-          ${w.big ? '<span class="wish-badge gold">💎 Крупная</span>' : '<span class="wish-badge green">⭐ Хотелка</span>'}
-          <span class="wish-date">${w.date || ''}</span>
+      </div>`;
+  }
+
+  function giftHTML(g) {
+    const dateStr = g.eventDate ? formatDate(g.eventDate) : '';
+    const remindStr = g.remindDays && g.eventDate ? `🔔 за ${g.remindDays} дн.` : '';
+    return `
+      <div class="swipe-wrap" data-id="${g.id}">
+        <div class="delete-bg" onclick="deleteItem('${g.id}','gift')">🗑</div>
+        <div class="wish-item" data-id="${g.id}" data-type="gift">
+          <div class="wish-favicon">${g.url ? `<img src="${faviconUrl(g.url)}" onerror="this.style.display='none'" />` : '🎁'}</div>
+          <div class="wish-info" onclick="${g.url?`openUrl('${g.url}')`:``}">
+            <div class="wish-name">${g.title}</div>
+            <div class="wish-domain">${g.who ? '→ '+g.who : (g.url ? getDomain(g.url) : '—')}</div>
+            ${dateStr ? `<div class="wish-tags"><span class="date-badge">📅 ${dateStr}</span></div>` : ''}
+          </div>
+          <div class="wish-right">
+            <span class="wish-badge badge-pink">🎁</span>
+            ${g.price ? `<span class="wish-price">${g.price}</span>` : ''}
+            ${remindStr ? `<div class="remind-btn" onclick="registerReminder(event,'${g.id}')">${remindStr}</div>` : ''}
+          </div>
         </div>
-      </a>
-    `).join('');
+      </div>`;
+  }
+
+  const getEmoji = tags => {
+    const m={одежда:'👕',техника:'💻',книги:'📚',дизайн:'🎨',путешествия:'✈️',хобби:'🎯',frontend:'💻'};
+    for(const t of(tags||[]))if(m[t])return m[t]; return '✨';
+  };
+  const openUrl = url => window.open(url,'_blank');
+
+  function renderList(id, list, empty) {
+    const el = document.getElementById(id);
+    el.innerHTML = list.length
+      ? list.map(wishHTML).join('')
+      : `<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">${empty}</div></div>`;
   }
 
   function refresh() {
-    const wishes = load();
-    const big = wishes.filter(w => w.big);
-
-    renderList('list-all', wishes);
-    renderList('list-big', big);
-
-    document.getElementById('sub-all').textContent = wishes.length + ' ' + plural(wishes.length, 'желание', 'желания', 'желаний');
-    document.getElementById('sub-big').textContent = big.length + ' ' + plural(big.length, 'желание', 'желания', 'желаний');
-    document.getElementById('statAll').textContent = wishes.length;
-    document.getElementById('statBig').textContent = big.length;
+    const wishes = load(), big = wishes.filter(w=>w.big), bought=wishes.filter(w=>w.bought), gifts=loadGifts();
+    const qA=document.getElementById('search-all')?.value||'', qB=document.getElementById('search-big')?.value||'';
+    const sA=document.getElementById('sort-all')?.value||'date', sB=document.getElementById('sort-big')?.value||'date';
+    renderList('list-all', applyFilter(wishes,qA,sA), 'Пока пусто — добавь первую хотелку');
+    renderList('list-big', applyFilter(big,qB,sB), 'Нет крупных хотелок');
+    document.getElementById('list-gifts').innerHTML = gifts.length ? gifts.map(giftHTML).join('') : '';
+    document.getElementById('sub-all').textContent   = wishes.length+' '+plural(wishes.length,'желание','желания','желаний');
+    document.getElementById('sub-big').textContent   = big.length+' '+plural(big.length,'желание','желания','желаний');
+    document.getElementById('sub-gifts').textContent = gifts.length+' '+plural(gifts.length,'идея','идеи','идей');
+    document.getElementById('statAll').textContent   = wishes.length;
+    document.getElementById('statBig').textContent   = big.length;
+    document.getElementById('statBought').textContent= bought.length;
+    applyChipColors();
+    initSwipe();
   }
 
-  function plural(n, one, two, five) {
-    const m = n % 100;
-    if (m >= 11 && m <= 19) return five;
-    const m2 = n % 10;
-    if (m2 === 1) return one;
-    if (m2 >= 2 && m2 <= 4) return two;
-    return five;
+  // ── Delete & bought ──
+  function deleteItem(id, type) {
+    if(type==='gift') saveGifts(loadGifts().filter(g=>String(g.id)!==String(id)));
+    else save(load().filter(w=>String(w.id)!==String(id)));
+    showToast('🗑 Удалено'); refresh();
+  }
+  function toggleBought(e, id) {
+    e.stopPropagation();
+    const list=load(), w=list.find(w=>String(w.id)===String(id)); if(!w)return;
+    w.bought=!w.bought; save(list); refresh();
+    showToast(w.bought?'✅ Отмечено купленным!':'↩️ Снято');
   }
 
-  // ── Tab switching ──
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  // ── Register reminder via sendData ──
+  function registerReminder(e, id) {
+    e.stopPropagation();
+    if (!tg) return;
+    const gift = loadGifts().find(g=>String(g.id)===String(id));
+    if (!gift) return;
+    const dateFormatted = formatDate(gift.eventDate);
+    tg.showConfirm(
+      `Зарегистрировать напоминание?\n\n🎁 ${gift.title}\n📅 ${dateFormatted}\n🔔 За ${gift.remindDays} дней\n\n(Приложение закроется)`,
+      ok => { if(ok) tg.sendData(JSON.stringify({ type:'reminder', id:gift.id, title:gift.title, who:gift.who||'', eventDate:gift.eventDate, remindDays:gift.remindDays })); }
+    );
+  }
+
+  // ── Swipe ──
+  function initSwipe() {
+    document.querySelectorAll('.wish-item').forEach(el => {
+      let sx=0, sy=0, drag=false;
+      el.addEventListener('touchstart', e=>{sx=e.touches[0].clientX; sy=e.touches[0].clientY; drag=false;},{passive:true});
+      el.addEventListener('touchmove', e=>{
+        const dx=e.touches[0].clientX-sx, dy=e.touches[0].clientY-sy;
+        if(!drag&&Math.abs(dy)>Math.abs(dx))return;
+        if(dx>0)return; drag=true;
+        el.style.transform=`translateX(${Math.max(dx,-80)}px)`; e.preventDefault();
+      },{passive:false});
+      el.addEventListener('touchend', e=>{
+        const dx=e.changedTouches[0].clientX-sx;
+        if(dx<-55){
+          el.style.cssText='transform:translateX(-100%);opacity:0;transition:transform .25s,opacity .25s';
+          setTimeout(()=>deleteItem(el.dataset.id, el.dataset.type),250);
+        } else { el.style.transform=''; }
+      },{passive:true});
+    });
+  }
+
+  // ── Tabs ──
+  let currentTab='home';
+  document.querySelectorAll('.nav-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      currentTab=item.dataset.tab;
+      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
       item.classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.getElementById('tab-' + item.dataset.tab).classList.add('active');
-      if (tg) item.dataset.tab === 'home' ? syncBtn() : tg.MainButton.hide();
+      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+      document.getElementById('tab-'+currentTab).classList.add('active');
+      if(tg) syncBtn();
     });
   });
 
+  ['all','big'].forEach(id=>{
+    document.getElementById('search-'+id).addEventListener('input',refresh);
+    document.getElementById('sort-'+id).addEventListener('change',refresh);
+  });
+
   // ── Home form ──
-  const urlEl    = document.getElementById('url');
-  const titleEl  = document.getElementById('title');
-  const tagsEl   = document.getElementById('tags');
-  const notesEl  = document.getElementById('notes');
-  const isBigEl  = document.getElementById('isBig');
-  const statusEl = document.getElementById('urlStatus');
-  const clearBtn = document.getElementById('urlClear');
+  const titleEl=document.getElementById('title'), urlEl=document.getElementById('url'),
+        priceEl=document.getElementById('price'), tagsEl=document.getElementById('tags'),
+        notesEl=document.getElementById('notes'), isBigEl=document.getElementById('isBig'),
+        statusEl=document.getElementById('urlStatus'), clearBtn=document.getElementById('urlClear');
 
-  function isUrl(s) {
-    try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; }
-    catch { return false; }
-  }
-  function syncBtn() {
-    if (!tg) return;
-    isUrl(urlEl.value.trim()) ? tg.MainButton.show() : tg.MainButton.hide();
+  const isUrl=s=>{try{const u=new URL(s);return u.protocol==='http:'||u.protocol==='https:';}catch{return false;}};
+  function syncBtn(){
+    if(!tg)return;
+    if(currentTab==='home'){ titleEl.value.trim()?tg.MainButton.show():tg.MainButton.hide(); tg.MainButton.setText('Сохранить хотелку'); }
+    else if(currentTab==='gifts'){ document.getElementById('g-title').value.trim()?tg.MainButton.show():tg.MainButton.hide(); tg.MainButton.setText('Сохранить подарок'); }
+    else tg.MainButton.hide();
   }
 
-  urlEl.addEventListener('input', () => {
-    const v = urlEl.value.trim();
-    clearBtn.style.display = v ? 'flex' : 'none';
-    if (!v) statusEl.textContent = '';
-    syncBtn();
-  });
+  titleEl.addEventListener('input', syncBtn);
 
-  clearBtn.addEventListener('click', () => {
-    urlEl.value = ''; clearBtn.style.display = 'none';
-    statusEl.textContent = ''; if (tg) tg.MainButton.hide();
-    urlEl.focus();
-  });
-
-  document.getElementById('quickTags').addEventListener('click', e => {
-    const chip = e.target.closest('.tag-chip');
-    if (!chip) return;
-    chip.classList.toggle('selected');
-    const tag = chip.dataset.tag;
-    const cur = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
-    const idx = cur.indexOf(tag);
-    if (idx === -1) cur.push(tag); else cur.splice(idx, 1);
-    tagsEl.value = cur.join(', ');
-  });
-
-  // Clipboard auto-fill
-  if (navigator.clipboard?.readText) {
-    navigator.clipboard.readText().then(text => {
-      const t = text?.trim();
-      if (t && isUrl(t) && !urlEl.value) {
-        urlEl.value = t; clearBtn.style.display = 'flex';
-        statusEl.className = 'status ok'; statusEl.textContent = '📋 Вставлено из буфера';
-        syncBtn();
+  // URL preview
+  let previewTimer=null;
+  urlEl.addEventListener('input',()=>{
+    const v=urlEl.value.trim();
+    clearBtn.style.display=v?'flex':'none';
+    if(!v){statusEl.textContent=''; document.getElementById('urlPreview').classList.remove('show'); return;}
+    clearTimeout(previewTimer);
+    previewTimer=setTimeout(()=>{
+      if(isUrl(v)){
+        const domain=getDomain(v);
+        const fav=document.getElementById('previewFavicon');
+        const tit=document.getElementById('previewTitle');
+        fav.src=`https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        tit.textContent=domain;
+        document.getElementById('urlPreview').classList.add('show');
       }
-    }).catch(() => {});
+    },400);
+  });
+  clearBtn.addEventListener('click',()=>{
+    urlEl.value=''; clearBtn.style.display='none'; statusEl.textContent='';
+    document.getElementById('urlPreview').classList.remove('show'); urlEl.focus();
+  });
+
+  document.getElementById('quickTags').addEventListener('click',e=>{
+    const chip=e.target.closest('.tag-chip'); if(!chip)return;
+    chip.classList.toggle('selected');
+    const tag=chip.dataset.tag, cur=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
+    const idx=cur.indexOf(tag);
+    if(idx===-1)cur.push(tag); else cur.splice(idx,1);
+    tagsEl.value=cur.join(', ');
+    applyChipColors();
+  });
+  tagsEl.addEventListener('input',()=>{
+    const cur=tagsEl.value.split(',').map(t=>t.trim());
+    document.querySelectorAll('.tag-chip').forEach(c=>c.classList.toggle('selected',cur.includes(c.dataset.tag)));
+    applyChipColors();
+  });
+
+  if(navigator.clipboard?.readText){
+    navigator.clipboard.readText().then(text=>{
+      const t=text?.trim();
+      if(t&&isUrl(t)&&!urlEl.value){
+        urlEl.value=t; clearBtn.style.display='flex';
+        statusEl.className='status ok'; statusEl.textContent='📋 Вставлено из буфера';
+        urlEl.dispatchEvent(new Event('input'));
+      }
+    }).catch(()=>{});
   }
+
+  document.getElementById('g-title').addEventListener('input',syncBtn);
 
   // ── Save wish ──
-  function saveWish() {
-    const url = urlEl.value.trim();
-    if (!url) return;
-
-    const tags = tagsEl.value.split(',').map(t => t.trim()).filter(Boolean);
-    const wish = {
-      id: Date.now(),
-      url,
-      title: titleEl.value.trim() || getDomain(url),
-      tags,
-      notes: notesEl.value.trim(),
-      big: isBigEl.checked,
-      date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }),
-    };
-
-    const list = load();
-    list.unshift(wish);
-    save(list);
-    refresh();
-    showToast(wish.big ? '💎 Крупная хотелка сохранена!' : '✨ Хотелка сохранена!');
-
-    // Сброс формы
-    urlEl.value = ''; titleEl.value = ''; tagsEl.value = ''; notesEl.value = '';
-    isBigEl.checked = false;
-    clearBtn.style.display = 'none';
-    statusEl.textContent = '';
-    document.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('selected'));
-    if (tg) tg.MainButton.hide();
+  function saveWish(){
+    const title=titleEl.value.trim(); if(!title)return;
+    const tags=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
+    const list=load();
+    list.unshift({id:Date.now(),title,url:urlEl.value.trim(),price:priceEl.value.trim(),tags,notes:notesEl.value.trim(),big:isBigEl.checked,bought:false,date:today()});
+    save(list); refresh();
+    showToast(isBigEl.checked?'💎 Крупная хотелка сохранена!':'✨ Хотелка сохранена!');
+    titleEl.value=''; urlEl.value=''; priceEl.value=''; tagsEl.value=''; notesEl.value=''; isBigEl.checked=false;
+    clearBtn.style.display='none'; statusEl.textContent='';
+    document.getElementById('urlPreview').classList.remove('show');
+    document.querySelectorAll('.tag-chip').forEach(c=>c.classList.remove('selected'));
+    applyChipColors(); if(tg)tg.MainButton.hide();
   }
 
-  if (tg) tg.MainButton.onClick(saveWish);
+  // ── Save gift ──
+  function saveGift(){
+    const title=document.getElementById('g-title').value.trim(); if(!title)return;
+    const list=loadGifts();
+    list.unshift({
+      id:Date.now(), title,
+      who:document.getElementById('g-who').value.trim(),
+      price:document.getElementById('g-price').value.trim(),
+      url:document.getElementById('g-url').value.trim(),
+      notes:document.getElementById('g-notes').value.trim(),
+      eventDate:document.getElementById('g-date').value,
+      remindDays:document.getElementById('g-remind').value||'',
+      date:today()
+    });
+    saveGifts(list); refresh();
+    showToast('🎁 Подарок сохранён!');
+    ['g-title','g-who','g-price','g-url','g-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('g-date').value=''; document.getElementById('g-remind').value='';
+    if(tg)tg.MainButton.hide();
+  }
 
-  // Init
-  refresh();
+  if(tg) tg.MainButton.onClick(()=>{ if(currentTab==='home')saveWish(); if(currentTab==='gifts')saveGift(); });
+
+  applyChipColors(); refresh();
 </script>
 </body>
 </html>
