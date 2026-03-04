@@ -103,8 +103,9 @@
 
     /* ── Currency picker ── */
     .cur-btn { display: inline-flex; align-items: center; gap: 3px; background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px; padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa; cursor: pointer; user-select: none; white-space: nowrap; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
-    #globalCurDrop { position: fixed; z-index: 9999; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.85); min-width: 120px; display: none; }
-    #globalCurDrop.open { display: block; }
+    #globalCurDrop, #occDrop { position: fixed; z-index: 9999; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.85); min-width: 120px; display: none; }
+    #globalCurDrop.open, #occDrop.open { display: block; }
+    #occDrop { min-width: 140px; }
     .cur-opt { padding: 13px 18px; font-size: 15px; cursor: pointer; color: #c4b5fd; display: flex; align-items: center; gap: 10px; -webkit-tap-highlight-color: transparent; }
     .cur-opt:active { background: #2a1f3d; }
     .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.1); }
@@ -145,7 +146,7 @@
     .person-count { font-size: 12px; color: #6b5a8d; font-weight: 400; }
 
     /* Swipe */
-    .swipe-wrap { position: relative; margin-bottom: 10px; border-radius: 16px; overflow: hidden; }
+    .swipe-wrap { position: relative; margin-bottom: 10px; border-radius: 16px; overflow: hidden; isolation: isolate; }
     .delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #5f1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px; }
     .wish-item { background: #17132a; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: relative; transition: transform .25s; will-change: transform; }
     .wish-item.bought { opacity: .5; }
@@ -230,14 +231,24 @@
     .sheet-close { width: 32px; height: 32px; border-radius: 50%; background: #2a2040; border: none; cursor: pointer; color: #a78bfa; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .save-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#7c3aed,#a78bfa); border: none; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px; margin-bottom: 8px; }
     .save-btn:active { opacity: .85; }
-    /* Edit icon on card */
-    .edit-btn { font-size: 14px; cursor: pointer; opacity: .4; -webkit-tap-highlight-color: transparent; user-select: none; padding: 2px 4px; }
-    .edit-btn:active { opacity: 1; }
+    /* Three-dots menu button on card */
+    .menu-btn { font-size: 20px; line-height: 1; cursor: pointer; color: #4a3a6d; -webkit-tap-highlight-color: transparent; user-select: none; padding: 2px 4px; letter-spacing: 1px; }
+    .menu-btn:active { color: #a78bfa; }
+    /* Card context menu */
+    #cardMenu { position:fixed;z-index:9999;background:#1f1835;border:1px solid #3d2f5a;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.85);min-width:160px;display:none; }
+    #cardMenu.open { display:block; }
+    .card-menu-opt { padding:14px 18px;font-size:15px;cursor:pointer;color:#c4b5fd;display:flex;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent; }
+    .card-menu-opt:active { background:#2a1f3d; }
+    .card-menu-opt.danger { color:#f87171; }
+    /* Big wish label */
+    .big-label { font-size:11px;color:#f0b429;font-weight:600;margin-top:1px; }
+    /* Pin indicator */
+    .wish-pin { font-size:10px;background:#1f2a3a;color:#60a5fa;padding:2px 7px;border-radius:10px;white-space:nowrap; }
     /* Sparkline */
     .sparkline-wrap { margin-top: 2px; line-height: 0; }
 
     /* FAB — горизонтальная кнопка снизу */
-    #fabAdd { position:fixed;bottom:66px;left:16px;right:16px;width:auto;height:48px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);z-index:90;-webkit-tap-highlight-color:transparent; }
+    #fabAdd { position:fixed;bottom:calc(72px + env(safe-area-inset-bottom,0px));left:16px;right:16px;width:auto;height:50px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);z-index:90;-webkit-tap-highlight-color:transparent; }
     #fabAdd.show { display:flex; }
 
     /* ── Multi-select ── */
@@ -273,6 +284,17 @@
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- Occasion filter dropdown -->
+<div id="occDrop">
+  <div class="cur-opt sel" data-occ="" onclick="setOccasion('',event)">✨ Все<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="ДР" onclick="setOccasion('ДР',event)">🎂 ДР<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="НГ" onclick="setOccasion('НГ',event)">🎄 НГ<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="Свадьба" onclick="setOccasion('Свадьба',event)">💍 Свадьба<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="8 Марта" onclick="setOccasion('8 Марта',event)">🌸 8 Марта<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="23 Февраля" onclick="setOccasion('23 Февраля',event)">💪 23 Фев<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-occ="ДР друга" onclick="setOccasion('ДР друга',event)">🎉 ДР друга<span class="cur-check">✓</span></div>
+</div>
 
 <!-- Global currency dropdown (fixed, never clipped) -->
 <div id="globalCurDrop">
@@ -322,6 +344,16 @@
     <div class="card"><div class="field"><input id="edit-url" type="url" autocomplete="off" spellcheck="false" /></div></div>
     <div class="section-label">Заметки</div>
     <div class="card"><div class="field"><textarea id="edit-notes" style="height:60px"></textarea></div></div>
+    <div class="card" style="margin-top:12px">
+      <div class="toggle-row">
+        <div><div class="toggle-label">💎 Крупная хотелка</div></div>
+        <label class="switch"><input type="checkbox" id="edit-big" /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row" style="border-top:1px solid rgba(255,255,255,.05)">
+        <div><div class="toggle-label">🎁 Это подарок</div><div class="toggle-sub">Переместить в раздел подарков</div></div>
+        <label class="switch"><input type="checkbox" id="edit-isGift" /><span class="slider"></span></label>
+      </div>
+    </div>
   </div>
 
   <!-- Gift edit fields -->
@@ -359,6 +391,12 @@
     <div class="card"><div class="field"><input id="edit-g-url" type="url" autocomplete="off" spellcheck="false" /></div></div>
     <div class="section-label">Заметки</div>
     <div class="card"><div class="field"><textarea id="edit-g-notes" style="height:60px"></textarea></div></div>
+    <div class="card" style="margin-top:12px">
+      <div class="toggle-row">
+        <div><div class="toggle-label">💎 Крупная хотелка</div></div>
+        <label class="switch"><input type="checkbox" id="edit-g-big" /><span class="slider"></span></label>
+      </div>
+    </div>
   </div>
 
   <button class="save-btn" onclick="saveEdit()">Сохранить</button>
@@ -495,6 +533,15 @@
     </div>
   </div>
   <div id="list-big"></div>
+
+  <!-- Archive section for big -->
+  <div id="archiveSectionBig" style="display:none">
+    <div class="archive-header" onclick="toggleArchiveBig()">
+      <span class="archive-title">🗄 Куплено (<span id="archiveCountBig">0</span>)</span>
+      <span class="archive-arrow" id="archiveArrowBig">▼</span>
+    </div>
+    <div class="archive-body" id="archiveBodyBig"></div>
+  </div>
 </div>
 
 <!-- ══ Подарки ══ -->
@@ -564,24 +611,23 @@
     </div>
 
     <div class="section-label">Заметки</div>
-    <div class="card"><div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div></div>
+    <div class="card">
+      <div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div>
+      <div class="toggle-row" style="border-top:1px solid rgba(255,255,255,.05)">
+        <div><div class="toggle-label">💎 Крупная хотелка</div></div>
+        <label class="switch"><input type="checkbox" id="g-big" /><span class="slider"></span></label>
+      </div>
+    </div>
     <div style="height:14px"></div>
   </div>
 
   <!-- ── List panel ── -->
   <div id="gtab-list" style="display:none">
-    <div style="display:flex;gap:6px;margin-bottom:12px">
-      <div class="view-btn-sm active" data-v="list" onclick="setGiftsView('list',this)">📋 Список</div>
-      <div class="view-btn-sm" data-v="person" onclick="setGiftsView('person',this)">👥 По людям</div>
-    </div>
-    <div class="occ-chips" id="occFilter">
-      <div class="occ-chip active" data-occ="">Все</div>
-      <div class="occ-chip" data-occ="ДР">🎂 ДР</div>
-      <div class="occ-chip" data-occ="НГ">🎄 НГ</div>
-      <div class="occ-chip" data-occ="Свадьба">💍 Свадьба</div>
-      <div class="occ-chip" data-occ="8 Марта">🌸 8 Марта</div>
-      <div class="occ-chip" data-occ="23 Февраля">💪 23 Фев</div>
-      <div class="occ-chip" data-occ="ДР друга">🎉 ДР друга</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;align-items:center">
+      <div class="view-btn-sm active" id="gv-list" data-v="list" onclick="setGiftsView('list',this)">📋 Список</div>
+      <div class="view-btn-sm" id="gv-person" data-v="person" onclick="setGiftsView('person',this)">👥 По людям</div>
+      <div class="view-btn-sm" id="occBtn" onclick="toggleOccDrop(event)">Повод ▾</div>
+      <div class="view-btn-sm" onclick="toggleCurDrop(event)"><span class="cur-label">BYN</span> ▾</div>
     </div>
     <div id="list-gifts"></div>
   </div>
@@ -640,8 +686,15 @@
   </div></div>
 </div>
 
+<!-- Card context menu (fixed, globally positioned) -->
+<div id="cardMenu">
+  <div class="card-menu-opt" id="cardMenuEdit" onclick="cardMenuEdit()">✏️ Изменить</div>
+  <div class="card-menu-opt" id="cardMenuPin" onclick="cardMenuPin()">📌 Закрепить</div>
+  <div class="card-menu-opt danger" onclick="cardMenuDelete()">🗑 Удалить</div>
+</div>
+
 <!-- FAB add button (visible on "all" tab) -->
-<button id="fabAdd" onclick="goToHomeAdd()">＋ Добавить</button>
+<button id="fabAdd" onclick="goToHomeAdd(currentTab==='big')">＋ Добавить</button>
 
 <!-- Multi-select action bar -->
 <div id="selBar">
@@ -746,16 +799,48 @@
     refresh();
   }
 
+  // ── Occasion dropdown ──
+  const occDrop = document.getElementById('occDrop');
+  let _occOpenBtn = null;
+
+  function toggleOccDrop(e) {
+    e.stopPropagation();
+    const btn = e.currentTarget;
+    if (_occOpenBtn === btn && occDrop.classList.contains('open')) {
+      occDrop.classList.remove('open'); _occOpenBtn = null; return;
+    }
+    const rect = btn.getBoundingClientRect();
+    const dropH = 7 * 46 + 8, dropW = 150;
+    const left = Math.min(rect.right - dropW, window.innerWidth - dropW - 8);
+    occDrop.style.top  = (window.innerHeight - rect.top < dropH + 8 ? rect.top - dropH - 8 : rect.bottom + 8) + 'px';
+    occDrop.style.left = Math.max(8, left) + 'px';
+    occDrop.classList.add('open');
+    _occOpenBtn = btn;
+  }
+
+  function setOccasion(occ, e) {
+    e.stopPropagation();
+    activeOccasion = occ;
+    occDrop.classList.remove('open'); _occOpenBtn = null;
+    const btn = document.getElementById('occBtn');
+    if (btn) btn.textContent = (occ || 'Повод') + ' ▾';
+    document.querySelectorAll('#occDrop .cur-opt').forEach(el =>
+      el.classList.toggle('sel', el.dataset.occ === occ));
+    refresh();
+  }
+
   document.addEventListener('click', e => {
     gDrop.classList.remove('open'); _dropOpenBtn = null;
+    occDrop.classList.remove('open'); _occOpenBtn = null;
+    if (!e.target.closest('#cardMenu')) cardMenu.classList.remove('open');
     // Клик по чекбоксу в режиме выбора
     const sc = e.target.closest('.sel-check');
     if (sc) { const wrap=sc.closest('.swipe-wrap'); if(wrap) { e.stopPropagation(); toggleSel(wrap.dataset.id); return; } }
     // В режиме выбора — тап на карточку тоже переключает выбор
-    if (_selMode) { const wrap=e.target.closest('.swipe-wrap[data-id]'); if(wrap && !e.target.closest('.edit-btn')) { e.stopPropagation(); toggleSel(wrap.dataset.id); return; } }
+    if (_selMode) { const wrap=e.target.closest('.swipe-wrap[data-id]'); if(wrap && !e.target.closest('.menu-btn')) { e.stopPropagation(); toggleSel(wrap.dataset.id); return; } }
     // Открываем URL по клику на карточку (data-href вместо onclick для безопасности)
     const info = e.target.closest('.wish-info[data-href]');
-    if (info && !e.target.closest('.wish-tags, .edit-btn')) openUrl(info.dataset.href);
+    if (info && !e.target.closest('.wish-tags, .menu-btn')) openUrl(info.dataset.href);
   });
 
   // ── Tag colors ──
@@ -851,18 +936,33 @@
     if (sortVal==='price-desc') res=[...res].sort((a,b)=>priceBYN(b)-priceBYN(a));
     if (sortVal==='prio')       res=[...res].sort((a,b)=>(PRIO_ORDER[a.priority||'']??3)-(PRIO_ORDER[b.priority||'']??3));
     // 'manual' — без сортировки, порядок из localStorage
+    // Закреплённые — всегда сверху
+    if (sortVal !== 'manual') {
+      const pinned = res.filter(i => i.pinned);
+      const rest   = res.filter(i => !i.pinned);
+      res = [...pinned, ...rest];
+    }
     return res;
   }
 
   // ── Wish card HTML ──
-  function wishHTML(w, inArchive=false) {
+  // isBigTab: rendering in "big" tab (hide diamond badge, it's implied)
+  // isAllTab: rendering in "all" tab (for big wishes: hide diamond, show text label instead)
+  function wishHTML(w, inArchive=false, isBigTab=false, isAllTab=false) {
     const bought = w.bought ? 'bought' : '';
     const check  = w.bought ? '✓' : '';
 
-    // Right-side badge: только статус покупки / крупная
+    // Right-side badge
     let rightBadge = '';
-    if (w.bought)   rightBadge = '<span class="wish-badge badge-green">✅</span>';
-    else if (w.big) rightBadge = '<span class="wish-badge badge-gold">💎</span>';
+    if (w.bought) {
+      rightBadge = '<span class="wish-badge badge-green">✅</span>';
+    } else if (w.big && !isBigTab && !isAllTab) {
+      // Show diamond only on home/archive outside the big/all tabs
+      rightBadge = '<span class="wish-badge badge-gold">💎</span>';
+    }
+    if (w.pinned && !w.bought) {
+      rightBadge = `<span class="wish-pin">📌</span>` + rightBadge;
+    }
 
     // Приоритет — идёт в строку с тегами (левая часть)
     const prioBadge = (!w.bought && w.priority && PRIO_BADGE[w.priority]) ? PRIO_BADGE[w.priority] : '';
@@ -880,6 +980,9 @@
       ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />`
       : (w.tags&&w.tags.length ? getEmoji(w.tags) : '✨');
 
+    // "крупная хотелка" text label — shown in all-tab for big wishes
+    const bigLabel = (w.big && isAllTab && !w.bought) ? `<div class="big-label">💎 крупная хотелка</div>` : '';
+
     // Одна строка: теги + приоритет + слежка
     const infoRow = (w.tags&&w.tags.length) || prioBadge || trackHtml
       ? `<div class="wish-tags">${tagBadges(w.tags)}${prioBadge}${trackHtml}</div>`
@@ -896,10 +999,11 @@
           <div class="wish-info"${w.url ? ` data-href="${escHtml(w.url)}"` : ''}>
             <div class="wish-name">${escHtml(w.title)}</div>
             <div class="wish-domain">${w.url ? getDomain(w.url) : ''}</div>
+            ${bigLabel}
             ${infoRow}
           </div>
           <div class="wish-right">
-            <span class="edit-btn" onclick="openEditWish(event,'${w.id}')">✏️</span>
+            ${!inArchive ? `<span class="menu-btn" onclick="openCardMenu(event,'${w.id}','wish')">⋯</span>` : ''}
             ${rightBadge}
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             ${sparkline(w.priceHistory)}
@@ -915,6 +1019,7 @@
     const remindStr = g.remindDays && g.eventDate ? `🔔 за ${escHtml(String(g.remindDays))} дн.` : '';
     const priceStr  = formatPrice(g.price, g.priceCur);
     const occBadge  = g.occasion ? `<span class="occ-badge">${escHtml(g.occasion)}</span>` : '';
+    const bigLabel  = g.big ? `<div class="big-label">💎 крупная хотелка</div>` : '';
     return `
       <div class="swipe-wrap" data-id="${g.id}">
         <div class="delete-bg" onclick="deleteItem('${g.id}','gift')">🗑</div>
@@ -925,13 +1030,14 @@
           <div class="wish-info"${g.url ? ` data-href="${escHtml(g.url)}"` : ''}>
             <div class="wish-name">${escHtml(g.title)}</div>
             <div class="wish-domain">${g.who ? '→ '+escHtml(g.who) : (g.url ? getDomain(g.url) : '—')}</div>
+            ${bigLabel}
             <div class="wish-tags">
               ${dateStr ? `<span class="date-badge">📅 ${dateStr}</span>` : ''}
               ${occBadge}
             </div>
           </div>
           <div class="wish-right">
-            <span class="edit-btn" onclick="openEditGift(event,'${g.id}')">✏️</span>
+            <span class="menu-btn" onclick="openCardMenu(event,'${g.id}','gift')">⋯</span>
             <span class="wish-badge badge-pink">🎁</span>
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             ${remindStr ? `<div class="remind-btn" onclick="registerReminder(event,'${g.id}')">${remindStr}</div>` : ''}
@@ -958,13 +1064,7 @@
     refresh();
   }
 
-  document.getElementById('occFilter').addEventListener('click', e => {
-    const chip = e.target.closest('.occ-chip'); if (!chip) return;
-    document.querySelectorAll('#occFilter .occ-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeOccasion = chip.dataset.occ;
-    refresh();
-  });
+  // occFilter удалён — повод выбирается через #occDrop dropdown
 
   function renderGiftsByPerson(gifts) {
     if (!gifts.length) return '<div class="empty"><div class="empty-icon">🎁</div><div class="empty-text">Нет подарков</div></div>';
@@ -985,11 +1085,62 @@
   }
 
   // ── Archive ──
-  let archiveOpen = false;
+  let archiveOpen = false, archiveBigOpen = false;
   function toggleArchive() {
     archiveOpen = !archiveOpen;
     document.getElementById('archiveBody').classList.toggle('open', archiveOpen);
     document.getElementById('archiveArrow').classList.toggle('open', archiveOpen);
+  }
+  function toggleArchiveBig() {
+    archiveBigOpen = !archiveBigOpen;
+    document.getElementById('archiveBodyBig').classList.toggle('open', archiveBigOpen);
+    document.getElementById('archiveArrowBig').classList.toggle('open', archiveBigOpen);
+  }
+
+  // ── Card context menu ──
+  const cardMenu = document.getElementById('cardMenu');
+  let _cardMenuId = null, _cardMenuType = null;
+
+  function openCardMenu(e, id, type) {
+    e.stopPropagation();
+    _cardMenuId = id; _cardMenuType = type;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const menuW = 170, menuH = 148;
+    let top = rect.bottom + 8;
+    if (top + menuH > window.innerHeight) top = rect.top - menuH - 8;
+    let left = rect.right - menuW;
+    if (left < 8) left = 8;
+    cardMenu.style.top  = top  + 'px';
+    cardMenu.style.left = left + 'px';
+    // Update pin label
+    const list = type === 'gift' ? loadGifts() : load();
+    const item = list.find(i => String(i.id) === String(id));
+    document.getElementById('cardMenuPin').textContent = (item?.pinned ? '📌 Открепить' : '📌 Закрепить');
+    cardMenu.classList.add('open');
+  }
+
+  function cardMenuEdit() {
+    cardMenu.classList.remove('open');
+    const fakeE = { stopPropagation: () => {} };
+    if (_cardMenuType === 'gift') openEditGift(fakeE, _cardMenuId);
+    else openEditWish(fakeE, _cardMenuId);
+  }
+
+  function cardMenuPin() {
+    cardMenu.classList.remove('open');
+    const isGift = _cardMenuType === 'gift';
+    const list = isGift ? loadGifts() : load();
+    const item = list.find(i => String(i.id) === String(_cardMenuId));
+    if (!item) return;
+    item.pinned = !item.pinned;
+    isGift ? saveGifts(list) : save(list);
+    refresh();
+    showToast(item.pinned ? '📌 Закреплено' : '📌 Откреплено');
+  }
+
+  function cardMenuDelete() {
+    cardMenu.classList.remove('open');
+    deleteItem(_cardMenuId, _cardMenuType);
   }
 
   // ── Refresh ──
@@ -1008,20 +1159,27 @@
     const allEl = document.getElementById('list-all');
     const filtered = applyFilter(active, qA, sA);
     allEl.innerHTML = filtered.length
-      ? filtered.map(w => wishHTML(w)).join('')
+      ? filtered.map(w => wishHTML(w, false, false, true)).join('')
       : `<div class="empty"><div class="empty-icon">✨</div><div class="empty-text">Пока пусто — добавь первую хотелку</div></div>`;
 
     const bigEl = document.getElementById('list-big');
     const filteredBig = applyFilter(big, qB, sB);
     bigEl.innerHTML = filteredBig.length
-      ? filteredBig.map(w => wishHTML(w)).join('')
+      ? filteredBig.map(w => wishHTML(w, false, true, false)).join('')
       : `<div class="empty"><div class="empty-icon">💎</div><div class="empty-text">Нет крупных хотелок</div></div>`;
 
-    // Archive section
+    // Archive section (all wishes)
     const archSec = document.getElementById('archiveSection');
     archSec.style.display = bought.length ? '' : 'none';
     document.getElementById('archiveCount').textContent = bought.length;
     document.getElementById('archiveBody').innerHTML = bought.map(w => wishHTML(w, true)).join('');
+
+    // Archive section (big wishes)
+    const boughtBig = bought.filter(w => w.big);
+    const archSecBig = document.getElementById('archiveSectionBig');
+    archSecBig.style.display = boughtBig.length ? '' : 'none';
+    document.getElementById('archiveCountBig').textContent = boughtBig.length;
+    document.getElementById('archiveBodyBig').innerHTML = boughtBig.map(w => wishHTML(w, true, true)).join('');
 
     // Gifts
     const filteredGifts = activeOccasion
@@ -1215,8 +1373,9 @@
     if(tg) syncBtn();
   }
 
-  function goToHomeAdd() {
+  function goToHomeAdd(big) {
     _switchTab('home');
+    if (big) { isBigEl.checked = true; }
     setTimeout(() => titleEl.focus(), 100);
   }
 
@@ -1317,7 +1476,8 @@
       // Сохранить как подарок
       const list=loadGifts();
       list.unshift({ id:Date.now(), title, who:document.getElementById('giftWho').value.trim(),
-        price, priceCur:activeCur, url, notes, occasion:'', eventDate:'', remindDays:'', date:today() });
+        price, priceCur:activeCur, url, notes, occasion:'', eventDate:'', remindDays:'',
+        big: isBigEl.checked, date:today() });
       saveGifts(list); refresh();
       showToast('🎁 Подарок сохранён!');
     } else {
@@ -1356,12 +1516,14 @@
       occasion:document.getElementById('g-occ').value,
       eventDate:document.getElementById('g-date').value,
       remindDays:document.getElementById('g-remind').value||'',
+      big:document.getElementById('g-big').checked||false,
       date:today()
     });
     saveGifts(list); refresh();
     showToast('🎁 Подарок сохранён!');
     ['g-title','g-who','g-price','g-url','g-notes'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('g-date').value=''; document.getElementById('g-remind').value=''; document.getElementById('g-occ').value='';
+    document.getElementById('g-big').checked=false;
     document.querySelectorAll('#occQuickTags .tag-chip').forEach(c=>c.classList.remove('selected'));
     applyChipColors(); if(tg) tg.MainButton.hide();
   }
@@ -1401,6 +1563,8 @@
     document.getElementById('edit-tags').value  = (w.tags || []).join(', ');
     document.getElementById('edit-url').value   = w.url || '';
     document.getElementById('edit-notes').value = w.notes || '';
+    document.getElementById('edit-big').checked = !!w.big;
+    document.getElementById('edit-isGift').checked = false;
     document.querySelectorAll('#editPrioPills .prio-pill').forEach(p =>
       p.classList.toggle('sel', p.dataset.p === _editPrio));
     document.getElementById('modalOverlay').classList.add('open');
@@ -1424,6 +1588,7 @@
     document.getElementById('edit-g-url').value   = g.url || '';
     document.getElementById('edit-g-notes').value = g.notes || '';
     document.getElementById('edit-g-occ').value   = g.occasion || '';
+    document.getElementById('edit-g-big').checked = !!g.big;
     document.querySelectorAll('#editOccTags .tag-chip').forEach(c =>
       c.classList.toggle('selected', c.dataset.occ === (g.occasion || '')));
     applyChipColors();
@@ -1459,15 +1624,29 @@
     if (_editType === 'wish') {
       const title = document.getElementById('edit-title').value.trim(); if (!title) return;
       const list = load(), w = list.find(w => String(w.id) === String(_editId)); if (!w) return;
-      w.title    = title;
-      w.price    = document.getElementById('edit-price').value.trim();
-      w.priceCur = activeCur;
-      w.tags     = document.getElementById('edit-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-      w.url      = document.getElementById('edit-url').value.trim();
-      w.notes    = document.getElementById('edit-notes').value.trim();
-      w.priority = _editPrio;
-      save(list);
-      showToast('✅ Изменения сохранены');
+      const isGiftNow = document.getElementById('edit-isGift').checked;
+      if (isGiftNow) {
+        // Convert wish → gift
+        const gifts = loadGifts();
+        gifts.unshift({ id: w.id, title, who: '', price: document.getElementById('edit-price').value.trim(),
+          priceCur: activeCur, url: document.getElementById('edit-url').value.trim(),
+          notes: document.getElementById('edit-notes').value.trim(), occasion: '', eventDate: '', remindDays: '',
+          big: document.getElementById('edit-big').checked, date: w.date || today() });
+        saveGifts(gifts);
+        save(list.filter(x => String(x.id) !== String(_editId)));
+        showToast('🎁 Перемещено в подарки');
+      } else {
+        w.title    = title;
+        w.price    = document.getElementById('edit-price').value.trim();
+        w.priceCur = activeCur;
+        w.tags     = document.getElementById('edit-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+        w.url      = document.getElementById('edit-url').value.trim();
+        w.notes    = document.getElementById('edit-notes').value.trim();
+        w.priority = _editPrio;
+        w.big      = document.getElementById('edit-big').checked;
+        save(list);
+        showToast('✅ Изменения сохранены');
+      }
     } else {
       const title = document.getElementById('edit-g-title').value.trim(); if (!title) return;
       const list = loadGifts(), g = list.find(g => String(g.id) === String(_editId)); if (!g) return;
@@ -1478,6 +1657,7 @@
       g.url      = document.getElementById('edit-g-url').value.trim();
       g.notes    = document.getElementById('edit-g-notes').value.trim();
       g.occasion = document.getElementById('edit-g-occ').value;
+      g.big      = document.getElementById('edit-g-big').checked;
       saveGifts(list);
       showToast('✅ Подарок обновлён');
     }
@@ -1551,7 +1731,7 @@
     let _lpTimer = null;
     document.addEventListener('touchstart', e => {
       const item = e.target.closest('.wish-item');
-      if (!item || e.target.closest('.edit-btn,.wish-check,.drag-handle,.sel-check')) return;
+      if (!item || e.target.closest('.menu-btn,.wish-check,.drag-handle,.sel-check')) return;
       if (_selMode) return;
       _lpTimer = setTimeout(() => {
         const type = item.dataset.type;
