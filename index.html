@@ -300,7 +300,7 @@
 <div id="globalCurDrop">
   <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
   <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
-  <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">💵 USD<span class="cur-check">✓</span></div>
 </div>
 
 <!-- Modal overlay + Edit sheet -->
@@ -506,7 +506,7 @@
   <!-- Archive section -->
   <div id="archiveSection" style="display:none">
     <div class="archive-header" onclick="toggleArchive()">
-      <span class="archive-title">🗄 Куплено (<span id="archiveCount">0</span>)</span>
+      <span class="archive-title">🗄 Архив (<span id="archiveCount">0</span>)</span>
       <span class="archive-arrow" id="archiveArrow">▼</span>
     </div>
     <div class="archive-body" id="archiveBody"></div>
@@ -537,7 +537,7 @@
   <!-- Archive section for big -->
   <div id="archiveSectionBig" style="display:none">
     <div class="archive-header" onclick="toggleArchiveBig()">
-      <span class="archive-title">🗄 Куплено (<span id="archiveCountBig">0</span>)</span>
+      <span class="archive-title">🗄 Архив (<span id="archiveCountBig">0</span>)</span>
       <span class="archive-arrow" id="archiveArrowBig">▼</span>
     </div>
     <div class="archive-body" id="archiveBodyBig"></div>
@@ -773,6 +773,8 @@
 
   function toggleCurDrop(e) {
     e.stopPropagation();
+    // Close occasion dropdown if open
+    occDrop.classList.remove('open'); _occOpenBtn = null;
     const btn = e.currentTarget;
     if (_dropOpenBtn === btn && gDrop.classList.contains('open')) {
       gDrop.classList.remove('open'); _dropOpenBtn = null; return;
@@ -805,6 +807,8 @@
 
   function toggleOccDrop(e) {
     e.stopPropagation();
+    // Close currency dropdown if open
+    gDrop.classList.remove('open'); _dropOpenBtn = null;
     const btn = e.currentTarget;
     if (_occOpenBtn === btn && occDrop.classList.contains('open')) {
       occDrop.classList.remove('open'); _occOpenBtn = null; return;
@@ -952,16 +956,13 @@
     const bought = w.bought ? 'bought' : '';
     const check  = w.bought ? '✓' : '';
 
-    // Right-side badge
+    // Right-side badge (bought status)
     let rightBadge = '';
     if (w.bought) {
       rightBadge = '<span class="wish-badge badge-green">✅</span>';
     } else if (w.big && !isBigTab && !isAllTab) {
-      // Show diamond only on home/archive outside the big/all tabs
+      // Show diamond badge only when not on big/all tabs
       rightBadge = '<span class="wish-badge badge-gold">💎</span>';
-    }
-    if (w.pinned && !w.bought) {
-      rightBadge = `<span class="wish-pin">📌</span>` + rightBadge;
     }
 
     // Приоритет — идёт в строку с тегами (левая часть)
@@ -980,13 +981,19 @@
       ? `<img src="${faviconUrl(w.url)}" onerror="this.style.display='none'" />`
       : (w.tags&&w.tags.length ? getEmoji(w.tags) : '✨');
 
-    // "крупная хотелка" text label — shown in all-tab for big wishes
-    const bigLabel = (w.big && isAllTab && !w.bought) ? `<div class="big-label">💎 крупная хотелка</div>` : '';
+    // "крупная хотелка" label — shown below tags on all-tab for big wishes (no diamond emoji)
+    const bigLabel = (w.big && isAllTab && !w.bought) ? `<div class="big-label">крупная хотелка</div>` : '';
 
     // Одна строка: теги + приоритет + слежка
     const infoRow = (w.tags&&w.tags.length) || prioBadge || trackHtml
       ? `<div class="wish-tags">${tagBadges(w.tags)}${prioBadge}${trackHtml}</div>`
       : '';
+
+    // Top-right row: pin (if pinned) + menu button
+    const pinHtml = (w.pinned && !w.bought) ? `<span class="wish-pin">📌</span>` : '';
+    const menuRow = !inArchive
+      ? `<div style="display:flex;align-items:center;gap:3px;justify-content:flex-end">${pinHtml}<span class="menu-btn" onclick="openCardMenu(event,'${w.id}','wish')">⋯</span></div>`
+      : (pinHtml ? `<div style="text-align:right">${pinHtml}</div>` : '');
 
     return `
       <div class="swipe-wrap" data-id="${w.id}">
@@ -999,13 +1006,13 @@
           <div class="wish-info"${w.url ? ` data-href="${escHtml(w.url)}"` : ''}>
             <div class="wish-name">${escHtml(w.title)}</div>
             <div class="wish-domain">${w.url ? getDomain(w.url) : ''}</div>
-            ${bigLabel}
             ${infoRow}
+            ${bigLabel}
           </div>
           <div class="wish-right">
-            ${!inArchive ? `<span class="menu-btn" onclick="openCardMenu(event,'${w.id}','wish')">⋯</span>` : ''}
+            ${menuRow}
             ${rightBadge}
-            ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
+            ${priceStr ? `<span class="wish-price" style="font-size:15px;font-weight:800">${priceStr}</span>` : ''}
             ${sparkline(w.priceHistory)}
             <span class="wish-date">${fmtDate(w.date)}</span>
           </div>
@@ -1019,7 +1026,6 @@
     const remindStr = g.remindDays && g.eventDate ? `🔔 за ${escHtml(String(g.remindDays))} дн.` : '';
     const priceStr  = formatPrice(g.price, g.priceCur);
     const occBadge  = g.occasion ? `<span class="occ-badge">${escHtml(g.occasion)}</span>` : '';
-    const bigLabel  = g.big ? `<div class="big-label">💎 крупная хотелка</div>` : '';
     return `
       <div class="swipe-wrap" data-id="${g.id}">
         <div class="delete-bg" onclick="deleteItem('${g.id}','gift')">🗑</div>
@@ -1030,7 +1036,6 @@
           <div class="wish-info"${g.url ? ` data-href="${escHtml(g.url)}"` : ''}>
             <div class="wish-name">${escHtml(g.title)}</div>
             <div class="wish-domain">${g.who ? '→ '+escHtml(g.who) : (g.url ? getDomain(g.url) : '—')}</div>
-            ${bigLabel}
             <div class="wish-tags">
               ${dateStr ? `<span class="date-badge">📅 ${dateStr}</span>` : ''}
               ${occBadge}
@@ -1038,7 +1043,6 @@
           </div>
           <div class="wish-right">
             <span class="menu-btn" onclick="openCardMenu(event,'${g.id}','gift')">⋯</span>
-            <span class="wish-badge badge-pink">🎁</span>
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             ${remindStr ? `<div class="remind-btn" onclick="registerReminder(event,'${g.id}')">${remindStr}</div>` : ''}
           </div>
@@ -1356,6 +1360,21 @@
       const el = document.activeElement;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
         setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+      }
+    });
+  }
+
+  // ── FAB position when keyboard appears ──
+  // Поднимаем FAB выше когда появляется клавиатура
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      const fab = document.getElementById('fabAdd');
+      if (!fab.classList.contains('show')) return;
+      const kbHeight = window.innerHeight - window.visualViewport.height;
+      if (kbHeight > 80) {
+        fab.style.bottom = (kbHeight + 12) + 'px';
+      } else {
+        fab.style.bottom = 'calc(72px + env(safe-area-inset-bottom,0px))';
       }
     });
   }
