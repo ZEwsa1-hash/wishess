@@ -135,6 +135,9 @@
     .view-toggle { display: flex; gap: 6px; margin-bottom: 12px; }
     .view-btn { flex: 1; padding: 9px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #2a2040; background: #17132a; color: #6b5a8d; text-align: center; transition: all .15s; user-select: none; -webkit-tap-highlight-color: transparent; }
     .view-btn.active { background: #2a1f3d; color: #a78bfa; border-color: #3d2f5a; }
+    /* Маленькие pill-кнопки для подвью */
+    .view-btn-sm { padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #2a2040; background: #17132a; color: #6b5a8d; white-space: nowrap; transition: all .15s; user-select: none; -webkit-tap-highlight-color: transparent; }
+    .view-btn-sm.active { background: #2a1f3d; color: #a78bfa; border-color: #3d2f5a; }
 
     /* ── Person groups ── */
     .person-group { margin-bottom: 18px; }
@@ -145,8 +148,7 @@
     .swipe-wrap { position: relative; margin-bottom: 10px; border-radius: 16px; overflow: hidden; }
     .delete-bg { position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #5f1a1a; display: flex; align-items: center; justify-content: center; font-size: 22px; }
     .wish-item { background: #17132a; border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: relative; transition: transform .25s; will-change: transform; }
-    .wish-item.bought { opacity: .55; }
-    .wish-item.bought .wish-name { text-decoration: line-through; }
+    .wish-item.bought { opacity: .5; }
 
     .wish-check { width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0; border: 2px solid #3d2f5a; display: flex; align-items: center; justify-content: center; font-size: 13px; transition: all .2s; cursor: pointer; }
     .wish-item.bought .wish-check { background: #2a1f3d; border-color: #a78bfa; }
@@ -233,6 +235,10 @@
     .edit-btn:active { opacity: 1; }
     /* Sparkline */
     .sparkline-wrap { margin-top: 2px; line-height: 0; }
+
+    /* FAB — горизонтальная кнопка снизу */
+    #fabAdd { position:fixed;bottom:66px;left:16px;right:16px;width:auto;height:48px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);border:none;color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 20px rgba(124,58,237,.4);z-index:90;-webkit-tap-highlight-color:transparent; }
+    #fabAdd.show { display:flex; }
 
     /* ── Multi-select ── */
     .sel-check { width:22px;height:22px;border-radius:50%;border:2px solid #3d2f5a;flex-shrink:0;display:none;align-items:center;justify-content:center;font-size:12px;transition:all .15s;cursor:pointer; }
@@ -409,12 +415,14 @@
     <div class="tag-chip" data-tag="хобби">хобби</div>
   </div>
 
-  <div class="section-label">Приоритет</div>
-  <div class="priority-pills" id="prioPills">
-    <div class="prio-pill sel" data-p="">Без приоритета</div>
-    <div class="prio-pill" data-p="urgent">🔴 Срочно</div>
-    <div class="prio-pill" data-p="important">🟡 Важно</div>
-    <div class="prio-pill" data-p="later">🔵 Позже</div>
+  <div id="prioSection">
+    <div class="section-label">Приоритет</div>
+    <div class="priority-pills" id="prioPills">
+      <div class="prio-pill sel" data-p="">Без приоритета</div>
+      <div class="prio-pill" data-p="urgent">🔴 Срочно</div>
+      <div class="prio-pill" data-p="important">🟡 Важно</div>
+      <div class="prio-pill" data-p="later">🔵 Позже</div>
+    </div>
   </div>
 
   <div class="section-label">Дополнительно</div>
@@ -422,6 +430,13 @@
     <div class="toggle-row">
       <div><div class="toggle-label">💎 Крупная хотелка</div><div class="toggle-sub">Дорогая или важная вещь</div></div>
       <label class="switch"><input type="checkbox" id="isBig" /><span class="slider"></span></label>
+    </div>
+    <div class="toggle-row" style="border-top:1px solid rgba(255,255,255,.05)">
+      <div><div class="toggle-label">🎁 Это подарок</div><div class="toggle-sub">Сохранить в раздел подарков</div></div>
+      <label class="switch"><input type="checkbox" id="isGift" onchange="toggleGiftMode(this.checked)" /><span class="slider"></span></label>
+    </div>
+    <div id="giftWhoRow" style="display:none;border-top:1px solid rgba(255,255,255,.05)" class="field">
+      <input id="giftWho" type="text" placeholder="Кому (необязательно)" autocomplete="off" list="contactsDatalist" />
     </div>
     <div class="field" style="border-top:1px solid rgba(255,255,255,.05)">
       <textarea id="notes" placeholder="Заметки, размер, цвет..."></textarea>
@@ -475,6 +490,9 @@
       <option value="price-desc">Дороже</option>
       <option value="manual">Вручную</option>
     </select>
+    <div class="cur-btn" onclick="toggleCurDrop(event)">
+      <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+    </div>
   </div>
   <div id="list-big"></div>
 </div>
@@ -486,76 +504,87 @@
     <div><div class="page-title">Подарки</div><div class="page-sub" id="sub-gifts">0 идей</div></div>
   </div>
 
-  <div class="section-label">Название *</div>
-  <div class="card"><div class="field"><input id="g-title" type="text" placeholder="Что подарить?" autocomplete="off" /></div></div>
+  <!-- Gifts main tabs -->
+  <div class="view-toggle" style="margin-bottom:16px">
+    <div class="view-btn active" id="gtab-add-btn" onclick="setGiftsMainTab('add',this)">➕ Добавить</div>
+    <div class="view-btn" id="gtab-list-btn" onclick="setGiftsMainTab('list',this)">📋 Список</div>
+  </div>
 
-  <div class="row2">
-    <div>
-      <div class="section-label">Кому</div>
-      <div class="card"><div class="field"><input id="g-who" type="text" placeholder="Маме, другу..." autocomplete="off" list="contactsDatalist" /><datalist id="contactsDatalist"></datalist></div></div>
-    </div>
-    <div>
-      <div class="section-label">Цена</div>
-      <div class="card"><div class="field">
-        <div style="display:flex;align-items:center;gap:8px">
-          <input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
-          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
-            <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+  <!-- ── Add panel ── -->
+  <div id="gtab-add">
+    <div class="section-label">Название *</div>
+    <div class="card"><div class="field"><input id="g-title" type="text" placeholder="Что подарить?" autocomplete="off" /></div></div>
+
+    <div class="row2">
+      <div>
+        <div class="section-label">Кому</div>
+        <div class="card"><div class="field"><input id="g-who" type="text" placeholder="Маме, другу..." autocomplete="off" list="contactsDatalist" /><datalist id="contactsDatalist"></datalist></div></div>
+      </div>
+      <div>
+        <div class="section-label">Цена</div>
+        <div class="card"><div class="field">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
+            <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+              <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+            </div>
           </div>
-        </div>
-      </div></div>
+        </div></div>
+      </div>
     </div>
-  </div>
 
-  <div class="section-label">Повод</div>
-  <div class="quick-tags" id="occQuickTags">
-    <div class="tag-chip" data-occ="ДР">🎂 ДР</div>
-    <div class="tag-chip" data-occ="НГ">🎄 НГ</div>
-    <div class="tag-chip" data-occ="Свадьба">💍 Свадьба</div>
-    <div class="tag-chip" data-occ="8 Марта">🌸 8 Марта</div>
-    <div class="tag-chip" data-occ="23 Февраля">💪 23 Фев</div>
-    <div class="tag-chip" data-occ="ДР друга">🎉 ДР друга</div>
-  </div>
-  <input id="g-occ" type="hidden" value="" />
-
-  <div class="section-label">Ссылка</div>
-  <div class="card"><div class="field"><input id="g-url" type="url" placeholder="https://..." autocomplete="off" spellcheck="false" /></div></div>
-
-  <div class="row2">
-    <div>
-      <div class="section-label">📅 Дата события</div>
-      <div class="card"><div class="field"><input id="g-date" type="date" /></div></div>
+    <div class="section-label">Повод</div>
+    <div class="quick-tags" id="occQuickTags">
+      <div class="tag-chip" data-occ="ДР">🎂 ДР</div>
+      <div class="tag-chip" data-occ="НГ">🎄 НГ</div>
+      <div class="tag-chip" data-occ="Свадьба">💍 Свадьба</div>
+      <div class="tag-chip" data-occ="8 Марта">🌸 8 Марта</div>
+      <div class="tag-chip" data-occ="23 Февраля">💪 23 Фев</div>
+      <div class="tag-chip" data-occ="ДР друга">🎉 ДР друга</div>
     </div>
-    <div>
-      <div class="section-label">🔔 Напомнить за</div>
-      <div class="card"><div class="field">
-        <div style="display:flex;align-items:center;gap:6px">
-          <input id="g-remind" type="number" placeholder="7" min="1" max="90" style="flex:1" />
-          <span style="color:#6b5a8d;font-size:14px;flex-shrink:0">дней</span>
-        </div>
-      </div></div>
+    <input id="g-occ" type="hidden" value="" />
+
+    <div class="section-label">Ссылка</div>
+    <div class="card"><div class="field"><input id="g-url" type="url" placeholder="https://..." autocomplete="off" spellcheck="false" /></div></div>
+
+    <div class="row2">
+      <div>
+        <div class="section-label">📅 Дата события</div>
+        <div class="card"><div class="field"><input id="g-date" type="date" /></div></div>
+      </div>
+      <div>
+        <div class="section-label">🔔 Напомнить за</div>
+        <div class="card"><div class="field">
+          <div style="display:flex;align-items:center;gap:6px">
+            <input id="g-remind" type="number" placeholder="7" min="1" max="90" style="flex:1" />
+            <span style="color:#6b5a8d;font-size:14px;flex-shrink:0">дней</span>
+          </div>
+        </div></div>
+      </div>
     </div>
+
+    <div class="section-label">Заметки</div>
+    <div class="card"><div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div></div>
+    <div style="height:14px"></div>
   </div>
 
-  <div class="section-label">Заметки</div>
-  <div class="card"><div class="field"><textarea id="g-notes" placeholder="Размер, цвет, бюджет..."></textarea></div></div>
-  <div style="height:14px"></div>
-
-  <!-- Gifts list controls -->
-  <div class="view-toggle">
-    <div class="view-btn active" data-v="list" onclick="setGiftsView('list',this)">📋 Список</div>
-    <div class="view-btn" data-v="person" onclick="setGiftsView('person',this)">👥 По людям</div>
+  <!-- ── List panel ── -->
+  <div id="gtab-list" style="display:none">
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <div class="view-btn-sm active" data-v="list" onclick="setGiftsView('list',this)">📋 Список</div>
+      <div class="view-btn-sm" data-v="person" onclick="setGiftsView('person',this)">👥 По людям</div>
+    </div>
+    <div class="occ-chips" id="occFilter">
+      <div class="occ-chip active" data-occ="">Все</div>
+      <div class="occ-chip" data-occ="ДР">🎂 ДР</div>
+      <div class="occ-chip" data-occ="НГ">🎄 НГ</div>
+      <div class="occ-chip" data-occ="Свадьба">💍 Свадьба</div>
+      <div class="occ-chip" data-occ="8 Марта">🌸 8 Марта</div>
+      <div class="occ-chip" data-occ="23 Февраля">💪 23 Фев</div>
+      <div class="occ-chip" data-occ="ДР друга">🎉 ДР друга</div>
+    </div>
+    <div id="list-gifts"></div>
   </div>
-  <div class="occ-chips" id="occFilter">
-    <div class="occ-chip active" data-occ="">Все</div>
-    <div class="occ-chip" data-occ="ДР">🎂 ДР</div>
-    <div class="occ-chip" data-occ="НГ">🎄 НГ</div>
-    <div class="occ-chip" data-occ="Свадьба">💍 Свадьба</div>
-    <div class="occ-chip" data-occ="8 Марта">🌸 8 Марта</div>
-    <div class="occ-chip" data-occ="23 Февраля">💪 23 Фев</div>
-    <div class="occ-chip" data-occ="ДР друга">🎉 ДР друга</div>
-  </div>
-  <div id="list-gifts"></div>
 </div>
 
 <!-- ══ Профиль ══ -->
@@ -592,9 +621,9 @@
   <div class="card" id="contactsCard" style="margin-bottom:10px"></div>
   <div class="card" style="margin-bottom:20px">
     <div class="field" style="display:flex;gap:8px;align-items:center">
-      <input id="c-name" type="text" placeholder="Имя" autocomplete="off" style="flex:1" />
-      <input id="c-bday" type="text" placeholder="ДД.ММ" autocomplete="off" style="width:64px;text-align:center" maxlength="5" />
-      <button onclick="addContact()" style="background:#7c3aed;border:none;border-radius:10px;color:#fff;font-size:18px;width:36px;height:36px;cursor:pointer;flex-shrink:0">+</button>
+      <input id="c-name" type="text" placeholder="Имя" autocomplete="off" style="flex:1" oninput="_updateAddContactBtn()" />
+      <input id="c-bday" type="text" placeholder="ДД.ММ.ГГГГ" autocomplete="off" style="width:90px;text-align:center" maxlength="10" oninput="_updateAddContactBtn()" />
+      <button id="c-add-btn" onclick="addContact()" style="background:#7c3aed;border:none;border-radius:10px;color:#fff;font-size:18px;width:36px;height:36px;flex-shrink:0;opacity:0.3;cursor:not-allowed" disabled>+</button>
     </div>
   </div>
 
@@ -610,6 +639,9 @@
     Напоминания и слежка за ценой — через бот.
   </div></div>
 </div>
+
+<!-- FAB add button (visible on "all" tab) -->
+<button id="fabAdd" onclick="goToHomeAdd()">＋ Добавить</button>
 
 <!-- Multi-select action bar -->
 <div id="selBar">
@@ -855,7 +887,7 @@
 
     return `
       <div class="swipe-wrap" data-id="${w.id}">
-        <div class="delete-bg" onclick="deleteItem('${w.id}','wish')">🗑</div>
+        ${!w.bought ? `<div class="delete-bg" onclick="deleteItem('${w.id}','wish')">🗑</div>` : ''}
         <div class="wish-item ${bought}" data-id="${w.id}" data-type="wish">
           <div class="drag-handle" data-drag="true">⠿</div>
           <div class="sel-check">✓</div>
@@ -912,9 +944,16 @@
   let giftsView     = 'list';
   let activeOccasion = '';
 
+  function setGiftsMainTab(tab, btn) {
+    document.getElementById('gtab-add').style.display = tab === 'add' ? '' : 'none';
+    document.getElementById('gtab-list').style.display = tab === 'list' ? '' : 'none';
+    document.getElementById('gtab-add-btn').classList.toggle('active', tab === 'add');
+    document.getElementById('gtab-list-btn').classList.toggle('active', tab === 'list');
+  }
+
   function setGiftsView(v, btn) {
     giftsView = v;
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#gtab-list .view-btn-sm').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     refresh();
   }
@@ -1131,6 +1170,7 @@
   // ── Swipe ──
   function initSwipe() {
     document.querySelectorAll('.wish-item').forEach(el => {
+      if (el.classList.contains('bought')) return; // купленные — без свайпа
       let sx=0, sy=0, drag=false;
       el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;drag=false;},{passive:true});
       el.addEventListener('touchmove',e=>{
@@ -1146,17 +1186,42 @@
     });
   }
 
+  // ── Keyboard scroll ──
+  // Скроллим активный инпут в видимую область когда появляется клавиатура
+  document.addEventListener('focusin', e => {
+    const el = e.target;
+    if (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') return;
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 350);
+  });
+  if (tg) {
+    tg.onEvent('viewportChanged', () => {
+      const el = document.activeElement;
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+      }
+    });
+  }
+
   // ── Tabs ──
   let currentTab='home';
+
+  function _switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.querySelector(`.nav-item[data-tab="${tab}"]`)?.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+    document.getElementById('fabAdd').classList.toggle('show', tab==='all' || tab==='big');
+    if(tg) syncBtn();
+  }
+
+  function goToHomeAdd() {
+    _switchTab('home');
+    setTimeout(() => titleEl.focus(), 100);
+  }
+
   document.querySelectorAll('.nav-item').forEach(item=>{
-    item.addEventListener('click',()=>{
-      currentTab=item.dataset.tab;
-      document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-      item.classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-      document.getElementById('tab-'+currentTab).classList.add('active');
-      if(tg) syncBtn();
-    });
+    item.addEventListener('click',()=> _switchTab(item.dataset.tab));
   });
 
   ['all','big'].forEach(id=>{
@@ -1168,7 +1233,13 @@
   const titleEl=document.getElementById('title'), urlEl=document.getElementById('url'),
         priceEl=document.getElementById('price'), tagsEl=document.getElementById('tags'),
         notesEl=document.getElementById('notes'), isBigEl=document.getElementById('isBig'),
+        isGiftEl=document.getElementById('isGift'),
         statusEl=document.getElementById('urlStatus'), clearBtn=document.getElementById('urlClear');
+
+  function toggleGiftMode(on) {
+    document.getElementById('giftWhoRow').style.display = on ? '' : 'none';
+    document.getElementById('prioSection').style.display = on ? 'none' : '';
+  }
 
   const isUrl=s=>{try{const u=new URL(s);return u.protocol==='http:'||u.protocol==='https:';}catch{return false;}};
   function syncBtn(){
@@ -1237,16 +1308,32 @@
 
   document.getElementById('g-title').addEventListener('input',syncBtn);
 
-  // ── Save wish ──
+  // ── Save wish / gift from home ──
   function saveWish(){
     const title=titleEl.value.trim(); if(!title) return;
-    const tags=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
-    const list=load();
-    list.unshift({ id:Date.now(), title, url:urlEl.value.trim(), price:priceEl.value.trim(), priceCur:activeCur, tags, notes:notesEl.value.trim(), big:isBigEl.checked, bought:false, priority:activePrio, date:today() });
-    save(list); refresh();
-    const emoji=activePrio==='urgent'?'🔴':activePrio==='important'?'🟡':isBigEl.checked?'💎':'✨';
-    showToast(`${emoji} Хотелка сохранена!`);
-    titleEl.value=''; urlEl.value=''; priceEl.value=''; tagsEl.value=''; notesEl.value=''; isBigEl.checked=false;
+    const url=urlEl.value.trim(), price=priceEl.value.trim(), notes=notesEl.value.trim();
+
+    if (isGiftEl.checked) {
+      // Сохранить как подарок
+      const list=loadGifts();
+      list.unshift({ id:Date.now(), title, who:document.getElementById('giftWho').value.trim(),
+        price, priceCur:activeCur, url, notes, occasion:'', eventDate:'', remindDays:'', date:today() });
+      saveGifts(list); refresh();
+      showToast('🎁 Подарок сохранён!');
+    } else {
+      // Сохранить как хотелку
+      const tags=tagsEl.value.split(',').map(t=>t.trim()).filter(Boolean);
+      const list=load();
+      list.unshift({ id:Date.now(), title, url, price, priceCur:activeCur, tags, notes, big:isBigEl.checked, bought:false, priority:activePrio, date:today() });
+      save(list); refresh();
+      const emoji=activePrio==='urgent'?'🔴':activePrio==='important'?'🟡':isBigEl.checked?'💎':'✨';
+      showToast(`${emoji} Хотелка сохранена!`);
+    }
+
+    titleEl.value=''; urlEl.value=''; priceEl.value=''; tagsEl.value=''; notesEl.value='';
+    isBigEl.checked=false; isGiftEl.checked=false;
+    document.getElementById('giftWho').value='';
+    toggleGiftMode(false);
     clearBtn.style.display='none'; statusEl.textContent=''; statusEl.className='status';
     document.getElementById('urlPreview').classList.remove('show');
     document.querySelectorAll('.tag-chip[data-tag]').forEach(c=>c.classList.remove('selected'));
@@ -1484,32 +1571,51 @@
   const loadContacts = () => { try{return JSON.parse(localStorage.getItem('contacts')||'[]');}catch{return[];} };
   const saveContacts = l => localStorage.setItem('contacts', JSON.stringify(l));
 
-  function getNextBirthday(mmdd) {
-    const [m,d] = mmdd.split('-').map(Number);
+  function getNextBirthday(birthday) {
+    // Поддерживаем оба формата: "MM-DD" (legacy) и "YYYY-MM-DD"
+    const parts = birthday.split('-');
+    const month = parseInt(parts.length === 3 ? parts[1] : parts[0]);
+    const day   = parseInt(parts.length === 3 ? parts[2] : parts[1]);
     const now = new Date();
-    const dt = new Date(now.getFullYear(), m-1, d);
-    if (dt <= now) dt.setFullYear(now.getFullYear()+1);
+    const dt = new Date(now.getFullYear(), month - 1, day);
+    if (dt <= now) dt.setFullYear(now.getFullYear() + 1);
     return dt;
+  }
+
+  function getBirthYear(birthday) {
+    const parts = birthday.split('-');
+    return parts.length === 3 ? parseInt(parts[0]) : null;
   }
 
   function daysUntil(date) {
     return Math.ceil((date - new Date()) / 86400000);
   }
 
+  function _updateAddContactBtn() {
+    const ok = document.getElementById('c-name').value.trim() && document.getElementById('c-bday').value.trim();
+    const btn = document.getElementById('c-add-btn');
+    btn.disabled = !ok;
+    btn.style.opacity = ok ? '1' : '0.3';
+    btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  }
+
   function addContact() {
     const name = document.getElementById('c-name').value.trim();
     const bdayRaw = document.getElementById('c-bday').value.trim();
-    if (!name) { showToast('❌ Введи имя'); return; }
-    // Принимаем ДД.ММ или ДД/ММ
-    const m = bdayRaw.match(/^(\d{1,2})[.\-\/](\d{1,2})$/);
-    if (bdayRaw && !m) { showToast('❌ Формат даты: ДД.ММ'); return; }
-    const birthday = m ? `${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}` : ''; // MM-DD
+    if (!name || !bdayRaw) return;
+    // Принимаем ДД.ММ.ГГГГ или ДД.ММ
+    const m = bdayRaw.match(/^(\d{1,2})[.\-\/](\d{1,2})(?:[.\-\/](\d{4}))?$/);
+    if (!m) { showToast('❌ Формат: ДД.ММ.ГГГГ'); return; }
+    const birthday = m[3]
+      ? `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}` // YYYY-MM-DD
+      : `${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;          // MM-DD legacy
     const contacts = loadContacts();
     if (contacts.some(c => c.name.toLowerCase() === name.toLowerCase())) { showToast('⚠️ Контакт уже есть'); return; }
     contacts.push({ id: Date.now(), name, birthday });
     saveContacts(contacts);
     document.getElementById('c-name').value = '';
     document.getElementById('c-bday').value = '';
+    _updateAddContactBtn();
     showToast('✅ Контакт добавлен');
     renderContacts();
     _refreshContactsDatalist();
@@ -1534,7 +1640,19 @@
     card.innerHTML = sorted.map(c => {
       const nextBd = c.birthday ? getNextBirthday(c.birthday) : null;
       const days = nextBd ? daysUntil(nextBd) : null;
-      const bdStr = c.birthday ? `🎂 ${c.birthday.split('-').reverse().join('.')}` : 'без ДР';
+      // Форматируем отображение даты
+      let bdStr = 'без ДР';
+      if (c.birthday) {
+        const parts = c.birthday.split('-');
+        if (parts.length === 3) {
+          // YYYY-MM-DD → ДД.ММ.ГГГГ + возраст
+          const birthYear = parseInt(parts[0]);
+          const age = new Date().getFullYear() - birthYear + (nextBd && nextBd.getFullYear() > new Date().getFullYear() ? -1 : 0);
+          bdStr = `🎂 ${parts[2]}.${parts[1]}.${parts[0]} · ${age} ${plural(age,'год','года','лет')}`;
+        } else {
+          bdStr = `🎂 ${parts[1]}.${parts[0]}`;
+        }
+      }
       const daysStr = days !== null ? (days === 0 ? '🎉 Сегодня!' : `через ${days} дн.`) : '';
       return `<div class="contact-item">
         <div class="contact-avatar">👤</div>
