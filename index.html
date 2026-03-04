@@ -102,14 +102,13 @@
     .prio-pill[data-p="later"].sel      { border-color: #60a5fa; }
 
     /* ── Currency picker ── */
-    .cur-btn { display: inline-flex; align-items: center; gap: 3px; background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px; padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa; cursor: pointer; user-select: none; white-space: nowrap; position: relative; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
-    .cur-drop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 500; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 28px rgba(0,0,0,.7); min-width: 110px; display: none; }
-    .cur-drop.open { display: block; }
-    .cur-btn.up .cur-drop { top: auto; bottom: calc(100% + 8px); }
-    .cur-opt { padding: 11px 16px; font-size: 14px; cursor: pointer; color: #c4b5fd; display: flex; align-items: center; gap: 8px; }
+    .cur-btn { display: inline-flex; align-items: center; gap: 3px; background: #2a1f3d; border: 1px solid #3d2f5a; border-radius: 20px; padding: 6px 11px; font-size: 12px; font-weight: 600; color: #a78bfa; cursor: pointer; user-select: none; white-space: nowrap; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+    #globalCurDrop { position: fixed; z-index: 9999; background: #1f1835; border: 1px solid #3d2f5a; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.85); min-width: 120px; display: none; }
+    #globalCurDrop.open { display: block; }
+    .cur-opt { padding: 13px 18px; font-size: 15px; cursor: pointer; color: #c4b5fd; display: flex; align-items: center; gap: 10px; -webkit-tap-highlight-color: transparent; }
     .cur-opt:active { background: #2a1f3d; }
-    .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.08); }
-    .cur-check { font-size: 12px; margin-left: auto; opacity: 0; }
+    .cur-opt.sel { color: #a78bfa; font-weight: 700; background: rgba(167,139,250,.1); }
+    .cur-check { font-size: 13px; margin-left: auto; opacity: 0; }
     .cur-opt.sel .cur-check { opacity: 1; }
 
     /* Search & Sort */
@@ -217,11 +216,118 @@
     .sync-export { background: #2a1f3d; color: #a78bfa; }
     .sync-import { background: #1f2a3a; color: #60a5fa; }
     .sync-export:active, .sync-import:active { opacity: .8; }
+
+    /* ── Edit modal sheet ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 800; display: none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    .modal-overlay.open { display: block; }
+    .edit-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 900; background: #0f0d17; border-radius: 24px 24px 0 0; padding: 0 16px env(safe-area-inset-bottom, 32px); max-height: 92vh; overflow-y: auto; transform: translateY(100%); transition: transform .35s cubic-bezier(.32,.72,0,1); }
+    .edit-sheet.open { transform: translateY(0); }
+    .sheet-handle { width: 40px; height: 4px; background: #2a2040; border-radius: 2px; margin: 14px auto 0; }
+    .sheet-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 4px; }
+    .sheet-title { font-size: 18px; font-weight: 700; }
+    .sheet-close { width: 32px; height: 32px; border-radius: 50%; background: #2a2040; border: none; cursor: pointer; color: #a78bfa; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .save-btn { width: 100%; padding: 16px; background: linear-gradient(135deg,#7c3aed,#a78bfa); border: none; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 20px; margin-bottom: 8px; }
+    .save-btn:active { opacity: .85; }
+    /* Edit icon on card */
+    .edit-btn { font-size: 14px; cursor: pointer; opacity: .4; -webkit-tap-highlight-color: transparent; user-select: none; padding: 2px 4px; }
+    .edit-btn:active { opacity: 1; }
+    /* Sparkline */
+    .sparkline-wrap { margin-top: 2px; line-height: 0; }
   </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- Global currency dropdown (fixed, never clipped) -->
+<div id="globalCurDrop">
+  <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
+  <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
+</div>
+
+<!-- Modal overlay + Edit sheet -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeEdit()"></div>
+<div class="edit-sheet" id="editSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title" id="editSheetTitle">Редактировать</span>
+    <button class="sheet-close" onclick="closeEdit()">✕</button>
+  </div>
+
+  <!-- Wish edit fields -->
+  <div id="editWishFields">
+    <div class="section-label">Название *</div>
+    <div class="card"><div class="field"><input id="edit-title" type="text" autocomplete="off" /></div></div>
+    <div class="row2">
+      <div>
+        <div class="section-label">Цена</div>
+        <div class="card"><div class="field">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="edit-price" type="number" min="0" autocomplete="off" style="flex:1;min-width:0" />
+            <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+              <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+      <div>
+        <div class="section-label">Категория</div>
+        <div class="card"><div class="field"><input id="edit-tags" type="text" autocomplete="off" /></div></div>
+      </div>
+    </div>
+    <div class="section-label">Приоритет</div>
+    <div class="priority-pills" id="editPrioPills">
+      <div class="prio-pill sel" data-p="" onclick="setEditPrio(this)">Без приоритета</div>
+      <div class="prio-pill" data-p="urgent" onclick="setEditPrio(this)">🔴 Срочно</div>
+      <div class="prio-pill" data-p="important" onclick="setEditPrio(this)">🟡 Важно</div>
+      <div class="prio-pill" data-p="later" onclick="setEditPrio(this)">🔵 Позже</div>
+    </div>
+    <div class="section-label">Ссылка</div>
+    <div class="card"><div class="field"><input id="edit-url" type="url" autocomplete="off" spellcheck="false" /></div></div>
+    <div class="section-label">Заметки</div>
+    <div class="card"><div class="field"><textarea id="edit-notes" style="height:60px"></textarea></div></div>
+  </div>
+
+  <!-- Gift edit fields -->
+  <div id="editGiftFields" style="display:none">
+    <div class="section-label">Название *</div>
+    <div class="card"><div class="field"><input id="edit-g-title" type="text" autocomplete="off" /></div></div>
+    <div class="row2">
+      <div>
+        <div class="section-label">Кому</div>
+        <div class="card"><div class="field"><input id="edit-g-who" type="text" autocomplete="off" /></div></div>
+      </div>
+      <div>
+        <div class="section-label">Цена</div>
+        <div class="card"><div class="field">
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="edit-g-price" type="number" min="0" autocomplete="off" style="flex:1;min-width:0" />
+            <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+              <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+    <div class="section-label">Повод</div>
+    <div class="quick-tags" id="editOccTags">
+      <div class="tag-chip" data-occ="ДР" onclick="setEditOcc(this)">🎂 ДР</div>
+      <div class="tag-chip" data-occ="НГ" onclick="setEditOcc(this)">🎄 НГ</div>
+      <div class="tag-chip" data-occ="Свадьба" onclick="setEditOcc(this)">💍 Свадьба</div>
+      <div class="tag-chip" data-occ="8 Марта" onclick="setEditOcc(this)">🌸 8 Марта</div>
+      <div class="tag-chip" data-occ="23 Февраля" onclick="setEditOcc(this)">💪 23 Фев</div>
+      <div class="tag-chip" data-occ="ДР друга" onclick="setEditOcc(this)">🎉 ДР друга</div>
+    </div>
+    <input id="edit-g-occ" type="hidden" value="" />
+    <div class="section-label">Ссылка</div>
+    <div class="card"><div class="field"><input id="edit-g-url" type="url" autocomplete="off" spellcheck="false" /></div></div>
+    <div class="section-label">Заметки</div>
+    <div class="card"><div class="field"><textarea id="edit-g-notes" style="height:60px"></textarea></div></div>
+  </div>
+
+  <button class="save-btn" onclick="saveEdit()">Сохранить</button>
+</div>
 
 <!-- ══ Главная ══ -->
 <div class="tab-content active" id="tab-home">
@@ -254,13 +360,8 @@
       <div class="card"><div class="field">
         <div style="display:flex;align-items:center;gap:8px">
           <input id="price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
-          <div class="cur-btn up" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
             <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
-            <div class="cur-drop">
-              <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
-              <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
-              <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
-            </div>
           </div>
         </div>
       </div></div>
@@ -315,11 +416,6 @@
     </select>
     <div class="cur-btn" onclick="toggleCurDrop(event)">
       <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
-      <div class="cur-drop">
-        <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
-        <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
-        <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
-      </div>
     </div>
   </div>
   <div id="list-all"></div>
@@ -372,13 +468,8 @@
       <div class="card"><div class="field">
         <div style="display:flex;align-items:center;gap:8px">
           <input id="g-price" type="number" placeholder="0" min="0" autocomplete="off" style="flex:1;min-width:0" />
-          <div class="cur-btn up" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
+          <div class="cur-btn" onclick="toggleCurDrop(event)" style="padding:4px 9px;font-size:11px">
             <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
-            <div class="cur-drop">
-              <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
-              <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
-              <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
-            </div>
           </div>
         </div>
       </div></div>
@@ -455,11 +546,6 @@
     </div>
     <div class="cur-btn" onclick="toggleCurDrop(event)">
       <span class="cur-label">BYN</span><span style="font-size:9px;margin-left:1px">▾</span>
-      <div class="cur-drop">
-        <div class="cur-opt" data-cur="BYN" onclick="setCur('BYN',event)">🇧🇾 BYN<span class="cur-check">✓</span></div>
-        <div class="cur-opt" data-cur="RUB" onclick="setCur('RUB',event)">🇷🇺 RUB<span class="cur-check">✓</span></div>
-        <div class="cur-opt" data-cur="USD" onclick="setCur('USD',event)">$ USD<span class="cur-check">✓</span></div>
-      </div>
     </div>
   </div>
 
@@ -502,9 +588,32 @@
   }
 
   // ── Currency ──
-  const RATES   = { BYN: 1, RUB: 31, USD: 0.29 };
+  // Fallback rates (updated March 2026), overridden by live fetch
+  const RATES   = { BYN: 1, RUB: 26.7, USD: 0.34 };
   const CUR_SYM = { BYN: 'Br', RUB: '₽', USD: '$' };
   let activeCur = localStorage.getItem('currency') || 'BYN';
+
+  // Live rates from open.er-api.com (free, no key required)
+  async function fetchLiveRates() {
+    try {
+      const cached = localStorage.getItem('rates_cache');
+      if (cached) {
+        const { ts, rates } = JSON.parse(cached);
+        if (Date.now() - ts < 6 * 3600 * 1000) { // cache 6 hours
+          Object.assign(RATES, rates); updateCurUI(); return;
+        }
+      }
+      const res = await fetch('https://open.er-api.com/v6/latest/BYN');
+      const data = await res.json();
+      if (data.result === 'success') {
+        RATES.RUB = Math.round(data.rates.RUB * 100) / 100;
+        RATES.USD = Math.round(data.rates.USD * 1000) / 1000;
+        localStorage.setItem('rates_cache', JSON.stringify({ ts: Date.now(), rates: { RUB: RATES.RUB, USD: RATES.USD } }));
+        refresh();
+      }
+    } catch { /* используем fallback */ }
+  }
+  fetchLiveRates();
 
   function formatPrice(raw) {
     if (!raw && raw !== 0) return '';
@@ -516,24 +625,46 @@
     return activeCur === 'USD' ? `${sym}${rounded}` : `${rounded} ${sym}`;
   }
 
+  // ── Global currency dropdown ──
+  const gDrop = document.getElementById('globalCurDrop');
+  let _dropOpenBtn = null;
+
   function updateCurUI() {
     document.querySelectorAll('.cur-label').forEach(el => el.textContent = activeCur);
-    document.querySelectorAll('.cur-opt').forEach(el => el.classList.toggle('sel', el.dataset.cur === activeCur));
+    document.querySelectorAll('#globalCurDrop .cur-opt').forEach(el =>
+      el.classList.toggle('sel', el.dataset.cur === activeCur));
     localStorage.setItem('currency', activeCur);
   }
+
   function toggleCurDrop(e) {
     e.stopPropagation();
-    document.querySelectorAll('.cur-drop.open').forEach(d => { if (!e.currentTarget.contains(d)) d.classList.remove('open'); });
-    const drop = e.currentTarget.querySelector('.cur-drop');
-    if (drop) drop.classList.toggle('open');
+    const btn = e.currentTarget;
+    if (_dropOpenBtn === btn && gDrop.classList.contains('open')) {
+      gDrop.classList.remove('open'); _dropOpenBtn = null; return;
+    }
+    // Position dropdown near the button
+    const rect = btn.getBoundingClientRect();
+    const dropH = 160, dropW = 130;
+    const left = Math.min(rect.right - dropW, window.innerWidth - dropW - 8);
+    // Open above if not enough space below
+    if (window.innerHeight - rect.bottom < dropH + 8) {
+      gDrop.style.top  = (rect.top - dropH - 8) + 'px';
+    } else {
+      gDrop.style.top  = (rect.bottom + 8) + 'px';
+    }
+    gDrop.style.left = Math.max(8, left) + 'px';
+    gDrop.classList.add('open');
+    _dropOpenBtn = btn;
   }
+
   function setCur(cur, e) {
     e.stopPropagation();
     activeCur = cur; updateCurUI();
-    document.querySelectorAll('.cur-drop').forEach(d => d.classList.remove('open'));
+    gDrop.classList.remove('open'); _dropOpenBtn = null;
     refresh();
   }
-  document.addEventListener('click', () => document.querySelectorAll('.cur-drop.open').forEach(d => d.classList.remove('open')));
+
+  document.addEventListener('click', () => { gDrop.classList.remove('open'); _dropOpenBtn = null; });
 
   // ── Tag colors ──
   const TAG_COLORS = {
@@ -649,8 +780,10 @@
             ${(w.tags&&w.tags.length) ? `<div class="wish-tags">${tagBadges(w.tags)}</div>` : ''}
           </div>
           <div class="wish-right">
+            <span class="edit-btn" onclick="openEditWish(event,'${w.id}')">✏️</span>
             ${topBadge}
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
+            ${sparkline(w.priceHistory)}
             ${trackHtml}
             <span class="wish-date">${w.date||''}</span>
           </div>
@@ -678,6 +811,7 @@
             </div>
           </div>
           <div class="wish-right">
+            <span class="edit-btn" onclick="openEditGift(event,'${g.id}')">✏️</span>
             <span class="wish-badge badge-pink">🎁</span>
             ${priceStr ? `<span class="wish-price">${priceStr}</span>` : ''}
             ${remindStr ? `<div class="remind-btn" onclick="registerReminder(event,'${g.id}')">${remindStr}</div>` : ''}
@@ -830,7 +964,10 @@
       `Отслеживать снижение цены?\n\n🛍 ${w.title}\n💰 ${formatPrice(w.price)}\n\n(Приложение закроется)`,
       ok => {
         if (!ok) return;
-        w.tracking = true; save(list);
+        w.tracking = true;
+        if (!w.priceHistory) w.priceHistory = [];
+        w.priceHistory.push({ price: parsePrice(w.price), date: today() });
+        save(list);
         tg.sendData(JSON.stringify({ type:'trackPrice', id:w.id, title:w.title, url:w.url, price:parsePrice(w.price) }));
       }
     );
@@ -1023,6 +1160,112 @@
   }
 
   if(tg) tg.MainButton.onClick(()=>{ if(currentTab==='home')saveWish(); if(currentTab==='gifts')saveGift(); });
+
+  // ── Sparkline ──
+  function sparkline(history) {
+    if (!history || history.length < 2) return '';
+    const prices = history.map(h => h.price);
+    const min = Math.min(...prices), max = Math.max(...prices);
+    const W = 60, H = 24, pad = 2, range = max - min || 1;
+    const pts = prices.map((p, i) => {
+      const x = pad + (i / (prices.length - 1)) * (W - pad * 2);
+      const y = H - pad - ((p - min) / range) * (H - pad * 2);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const color = prices[prices.length - 1] <= prices[0] ? '#4ade80' : '#f87171';
+    return `<div class="sparkline-wrap"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+  }
+
+  // ── Edit sheet ──
+  let _editId = null, _editType = null, _editPrio = '';
+
+  function openEditWish(e, id) {
+    e.stopPropagation();
+    const w = load().find(w => String(w.id) === String(id)); if (!w) return;
+    _editId = id; _editType = 'wish'; _editPrio = w.priority || '';
+    document.getElementById('editSheetTitle').textContent = 'Редактировать хотелку';
+    document.getElementById('editWishFields').style.display = '';
+    document.getElementById('editGiftFields').style.display = 'none';
+    document.getElementById('edit-title').value = w.title || '';
+    document.getElementById('edit-price').value = w.price || '';
+    document.getElementById('edit-tags').value  = (w.tags || []).join(', ');
+    document.getElementById('edit-url').value   = w.url || '';
+    document.getElementById('edit-notes').value = w.notes || '';
+    document.querySelectorAll('#editPrioPills .prio-pill').forEach(p =>
+      p.classList.toggle('sel', p.dataset.p === _editPrio));
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('editSheet').classList.add('open');
+    updateCurUI();
+  }
+
+  function openEditGift(e, id) {
+    e.stopPropagation();
+    const g = loadGifts().find(g => String(g.id) === String(id)); if (!g) return;
+    _editId = id; _editType = 'gift';
+    document.getElementById('editSheetTitle').textContent = 'Редактировать подарок';
+    document.getElementById('editWishFields').style.display = 'none';
+    document.getElementById('editGiftFields').style.display = '';
+    document.getElementById('edit-g-title').value = g.title || '';
+    document.getElementById('edit-g-who').value   = g.who || '';
+    document.getElementById('edit-g-price').value = g.price || '';
+    document.getElementById('edit-g-url').value   = g.url || '';
+    document.getElementById('edit-g-notes').value = g.notes || '';
+    document.getElementById('edit-g-occ').value   = g.occasion || '';
+    document.querySelectorAll('#editOccTags .tag-chip').forEach(c =>
+      c.classList.toggle('selected', c.dataset.occ === (g.occasion || '')));
+    applyChipColors();
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('editSheet').classList.add('open');
+    updateCurUI();
+  }
+
+  function closeEdit() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('editSheet').classList.remove('open');
+    _editId = null; _editType = null;
+  }
+
+  function setEditPrio(pill) {
+    _editPrio = pill.dataset.p;
+    document.querySelectorAll('#editPrioPills .prio-pill').forEach(p => p.classList.remove('sel'));
+    pill.classList.add('sel');
+  }
+
+  function setEditOcc(chip) {
+    const isSelected = chip.classList.contains('selected');
+    document.querySelectorAll('#editOccTags .tag-chip').forEach(c => c.classList.remove('selected'));
+    if (!isSelected) { chip.classList.add('selected'); document.getElementById('edit-g-occ').value = chip.dataset.occ; }
+    else document.getElementById('edit-g-occ').value = '';
+    applyChipColors();
+  }
+
+  function saveEdit() {
+    if (!_editId) return;
+    if (_editType === 'wish') {
+      const title = document.getElementById('edit-title').value.trim(); if (!title) return;
+      const list = load(), w = list.find(w => String(w.id) === String(_editId)); if (!w) return;
+      w.title    = title;
+      w.price    = document.getElementById('edit-price').value.trim();
+      w.tags     = document.getElementById('edit-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+      w.url      = document.getElementById('edit-url').value.trim();
+      w.notes    = document.getElementById('edit-notes').value.trim();
+      w.priority = _editPrio;
+      save(list);
+      showToast('✅ Изменения сохранены');
+    } else {
+      const title = document.getElementById('edit-g-title').value.trim(); if (!title) return;
+      const list = loadGifts(), g = list.find(g => String(g.id) === String(_editId)); if (!g) return;
+      g.title    = title;
+      g.who      = document.getElementById('edit-g-who').value.trim();
+      g.price    = document.getElementById('edit-g-price').value.trim();
+      g.url      = document.getElementById('edit-g-url').value.trim();
+      g.notes    = document.getElementById('edit-g-notes').value.trim();
+      g.occasion = document.getElementById('edit-g-occ').value;
+      saveGifts(list);
+      showToast('✅ Подарок обновлён');
+    }
+    closeEdit(); refresh();
+  }
 
   updateCurUI(); applyChipColors(); refresh();
 </script>
